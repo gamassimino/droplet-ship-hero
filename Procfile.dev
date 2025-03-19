@@ -1,0 +1,3 @@
+yarn: yarn build --watch
+vite: bin/vite dev
+rails: bin/rails s
