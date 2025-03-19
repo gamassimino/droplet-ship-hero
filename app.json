@@ -1,0 +1,21 @@
+{
+  "name": "Droplet Template",
+  "description": "A template for Fluid Droplet applications",
+  "repository": "https://github.com/fluid-commerce/droplet-template",
+  "keywords": ["rails", "ruby", "ecommerce", "fluid", "fluid-commerce", "droplet"],
+  "addons": ["heroku-postgresql"],
+  "buildpacks": [
+    { "url": "heroku/nodejs" },
+    { "url": "heroku/ruby" }
+  ],
+  "env": {
+    "RAILS_ENV": { "value": "production"},
+    "RAILS_MASTER_KEY": {
+      "description": "Your Rails master key for decrypting credentials",
+      "required": true
+    }
+  },
+  "scripts": {
+    "postdeploy": "bundle exec rails db:prepare && bundle exec rails db:seed"
+  }
+}

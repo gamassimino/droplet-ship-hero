@@ -11,11 +11,9 @@ Droplets are integrations between third-party services and Fluid. This is a repo
 ![Yarn](https://img.shields.io/badge/Yarn-4.7.0-2C8EBB?logo=yarn&logoColor=white)
 ![Font Awesome](https://img.shields.io/badge/Font_Awesome-6.7.2-528DD7?logo=fontawesome&logoColor=white)
 ![Tailwind CSS 4.0](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?logo=tailwindcss&logoColor=white)
+<br>
 
-### Setup
-
-Rename `.env.local.example` to `.env.local` and fill out the env variables
-
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/fluid-commerce/droplet-template)
 
 ### Running locally
 
