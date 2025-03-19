@@ -10,9 +10,9 @@
   ],
   "env": {
     "RAILS_ENV": { "value": "production"},
-    "RAILS_MASTER_KEY": {
-      "description": "Your Rails master key for decrypting credentials",
-      "required": true
+    "SECRET_KEY_BASE": {
+      "description": "A generated encryption key",
+      "generator": "secret"
     }
   },
   "scripts": {
