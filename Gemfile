@@ -7,6 +7,7 @@ gem "rails", "~> 8.0.2"
 gem "bootsnap", require: false
 gem "devise", "~> 4.9"
 gem "jbuilder"
+gem "json_schemer", "~> 2.4"
 gem "kamal", require: false
 gem "minitest-rails", "~> 8.0.0"
 gem "pg", "~> 1.1"
