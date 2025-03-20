@@ -9,13 +9,24 @@
     { "url": "heroku/ruby" }
   ],
   "env": {
-    "RAILS_ENV": { "value": "production"},
+    "RAILS_ENV": {
+      "description": "The Rails environment",
+      "value": "production"
+    },
     "SECRET_KEY_BASE": {
       "description": "A generated encryption key",
       "generator": "secret"
+    },
+    "ADMIN_EMAIL" : {
+      "description": "An email address for the initial admin user",
+      "required": true
+    },
+    "ADMIN_PASSWORD" : {
+      "description": "A password for the initial admin user",
+      "required": true
     }
   },
   "scripts": {
-    "postdeploy": "bundle exec rails db:prepare && bundle exec rails db:seed"
+    "postdeploy": "bundle exec rails db:prepare && bundle exec rails db:seed && bundle exec rake setup:create_admin"
   }
 }
