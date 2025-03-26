@@ -22,7 +22,7 @@ const Fluid = ({ name }: FluidProps) => {
         &nbsp;
         <i className="text-4xl fa-solid fa-droplet text-blue-600"></i>
       </div>
-      <Button variant="outline" size="sm" onClick={handleClick}>
+      <Button variant="outline" size="sm" onClick={handleClick} className="cursor-pointer">
         {name} ({count})
       </Button>
     </div>
