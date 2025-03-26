@@ -1,0 +1,9 @@
+<header class="flex h-8 shrink-0 items-center px-4 transition-[width,height] ease-linear w-full">
+  <div class="flex-1"></div>
+
+  <%= button_to "Sign out",
+                destroy_user_session_path,
+                method: :delete,
+                class: "text-sm text-blue-500 hover:text-blue-800"
+  %>
+</header>

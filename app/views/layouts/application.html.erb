@@ -13,16 +13,12 @@
     <%= csp_meta_tag %>
 
     <%= vite_client_tag %>
-    <%= vite_stylesheet_tag 'application' %>
-    <%= vite_typescript_tag 'application' %>
+    <%= vite_stylesheet_tag "application" %>
+    <%= vite_typescript_tag "application" %>
     <%= yield :head %>
   </head>
 
   <body>
-    <section id="page">
-      <p class="notice"><%= notice %></p>
-      <p class="alert"><%= alert %></p>
-      <%= yield %>
-    </section>
+    <%= yield %>
   </body>
 </html>
