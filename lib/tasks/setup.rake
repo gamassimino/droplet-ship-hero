@@ -15,7 +15,12 @@ namespace :setup do
       exit
     end
 
-    user = User.new(email: email, password: password, password_confirmation: password)
+    user = User.new(
+      email: email,
+      password: password,
+      password_confirmation: password,
+      permission_sets: [ "AdminPermissions" ]
+    )
     if user.save
       puts "Admin user for #{email} created"
     else

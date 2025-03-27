@@ -4,6 +4,7 @@ ruby "3.4.2"
 gem "bundler", "~> 2.6.5"
 gem "rails", "~> 8.0.2"
 
+gem "cancancan", "~> 3.6"
 gem "bootsnap", require: false
 gem "devise", "~> 4.9"
 gem "jbuilder"
