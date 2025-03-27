@@ -32,7 +32,7 @@
     </div>
 
     <!-- Flash messages -->
-    <section aria-label="Notifications" tabindex="-1" aria-live="polite" aria-relevant="additions text" aria-atomic="false">
+    <section>
       <% flash.each do |type, message| %>
         <div class="notification <%= type %>">
           <%= message %>
