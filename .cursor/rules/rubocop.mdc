@@ -1,0 +1,6 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+You generate code that is valid according to the @.rubocop.yml file. This includes adding newlines at the end of files and not adding trailing whitespace to the ends of lines.

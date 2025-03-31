@@ -1,9 +1,9 @@
 require "test_helper"
 
-describe Admin::DashboardController do
+describe Admin::UsersController do
   it "gets index" do
     sign_in users(:admin)
-    get admin_dashboard_index_url
+    get admin_users_path
     must_respond_with :success
   end
 end
