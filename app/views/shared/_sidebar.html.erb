@@ -5,8 +5,17 @@
     <ul class="flex w-full min-w-0 flex-col gap-1">
       <!-- Home Menu Item -->
       <li class="relative">
-        <i class="fa-solid fa-house text-slate-300"></i><%= link_to admin_dashboard_index_path do %>
+        <i class="fa-solid fa-house text-slate-300 mr-2"></i>
+        <%= link_to admin_dashboard_index_path do %>
           <span>Home</span>
+        <% end %>
+      </li>
+
+      <!-- Users Menu Item -->
+      <li class="relative">
+        <i class="fa-solid fa-users text-slate-300 mr-2"></i>
+        <%= link_to admin_users_path do %>
+          <span>Users</span>
         <% end %>
       </li>
     </ul>

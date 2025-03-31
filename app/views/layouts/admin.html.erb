@@ -18,26 +18,21 @@
     <%= yield :head %>
   </head>
   <body class="h-full antialiased">
-    <div class="group/sidebar-wrapper flex min-h-screen w-full">
+    <div class="flex min-h-screen w-full">
       <%= render partial: 'shared/sidebar' %>
 
-      <main class="relative flex min-h-screen flex-1 flex-col bg-background peer-data-[variant=inset]:min-h-[calc(100vh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow">
+      <main class="relative flex min-h-screen flex-1 flex-col">
         <%= render partial: 'shared/header' %>
         <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
-          <div class="gradient-background p-4 min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-gray-200 md:min-h-min">
-            <%= yield %>
+          <div class="gradient-background min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-gray-200 md:min-h-min">
+            <div class="mx-auto max-w-7xl space-y-12 px-10 py-8">
+              <div class="space-y-8">
+                <%= yield %>
+              </div>
+            </div>
           </div>
         </div>
       </main>
     </div>
-
-    <!-- Flash messages -->
-    <section>
-      <% flash.each do |type, message| %>
-        <div class="notification <%= type %>">
-          <%= message %>
-        </div>
-      <% end %>
-    </section>
   </body>
 </html>

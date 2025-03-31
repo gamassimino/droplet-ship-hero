@@ -1,0 +1,39 @@
+<div class="flex items-center justify-between">
+  <div class="flex items-center gap-2">
+    <h1 class="font-custom text-4xl font-bold text-gray-600">Users</h1>
+  </div>
+  <%= link_to "New User", new_admin_user_path, class: "bg-blue-600 hover:bg-orange-600 !text-white px-4 py-2 rounded-md" %>
+</div>
+
+<div class="bg-white rounded-lg p-6 border border-gray-100">
+  <table class="w-full">
+    <thead class="bg-slate-50 border-b border-gray-400">
+      <tr>
+        <th class="pl-2 text-left text-slate-600">ID</th>
+        <th class="pl-2 text-left text-slate-600">Email</th>
+        <th class="pl-2 text-left text-slate-600">Permission Sets</th>
+        <th class="pl-2 text-left text-slate-600">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr class="odd:bg-white even:bg-slate-50 hover:bg-slate-100">
+          <td class="pl-2 text-left text-gray-600"><%= user.id %></td>
+          <td class="pl-2 text-left text-gray-600"><%= user.email %></td>
+          <td class="pl-2 text-left text-gray-600"><%= user.permission_sets.join(", ") %></td>
+          <td class="pl-2 text-left text-gray-600">
+            <div class="flex gap-4">
+              <%= link_to "Edit", edit_admin_user_path(user) %>
+              <%=
+                button_to "Delete",
+                admin_user_path(user),
+                method: :delete,
+                class: "text-blue-600 hover:text-orange-600"
+              %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
