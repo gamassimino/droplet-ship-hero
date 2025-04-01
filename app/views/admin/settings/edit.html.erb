@@ -1,0 +1,16 @@
+<% content_for :head do %>
+  <%= vite_typescript_tag 'settings.tsx' %>
+<% end %>
+<div class="flex items-center justify-between">
+  <div class="flex items-center gap-2">
+    <h1 class="font-custom text-4xl font-bold text-gray-600"><%= @name %></h1>
+  </div>
+</div>
+
+<div
+  id="root-element"
+  data-id="<%= @setting.id %>"
+  data-schema="<%= @setting.schema.to_json %>"
+  data-initial-data="<%= @setting.values.to_json %>"
+  data-index-url="<%= admin_settings_path %>"
+></div>

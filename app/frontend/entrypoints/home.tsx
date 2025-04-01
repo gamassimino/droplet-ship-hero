@@ -1,6 +1,5 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { Button } from '~/components/ui/button';
 
 interface FluidProps {
   name: string;
@@ -9,7 +8,9 @@ interface FluidProps {
 const Fluid = ({ name }: FluidProps) => {
   const [count, setCount] = React.useState(1);
 
-  const handleClick = () => setCount((count + 1) % 10);
+  const handleClick = () => {
+    setCount((count + 1) % 10);
+  };
 
   return (
     <div className="flex flex-col gap-2 justify-center items-center h-screen">
@@ -22,9 +23,13 @@ const Fluid = ({ name }: FluidProps) => {
         &nbsp;
         <i className="text-4xl fa-solid fa-droplet text-blue-600"></i>
       </div>
-      <Button variant="outline" size="sm" onClick={handleClick} className="cursor-pointer">
-        {name} ({count})
-      </Button>
+      <button
+        onClick={handleClick}
+        className="cursor-pointer border border-gray-600 rounded-md px-1 py-1 bg-slate-200 text-slate-800 hover:bg-slate-300 flex items-center gap-2"
+      >
+        <span>{name}</span>
+        <span className="text-sm font-mono bg-slate-600 rounded-full px-2 text-white">{count}</span>
+      </button>
     </div>
   );
 };
