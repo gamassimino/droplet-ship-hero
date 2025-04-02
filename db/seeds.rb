@@ -19,10 +19,10 @@ Setting.find_or_create_by!(name: "fluid_api") do |setting|
 end
 
 Setting.find_or_create_by!(name: "droplet") do |setting|
-  setting.description = "Name and embed URL for the Droplet"
+  setting.description = "General settings for the Droplet"
   setting.schema = {
     type: "object",
-    required: [ "name" ],
+    required: %w[ name embed_url active ],
     properties: {
       name: {
         type: "string",
@@ -30,10 +30,18 @@ Setting.find_or_create_by!(name: "droplet") do |setting|
       embed_url: {
         type: %w[string null],
       },
+      uuid: {
+        type: "string",
+      },
+      active: {
+        type: "boolean",
+      },
     },
   }
   setting.values = {
     name: "Placeholder",
+    embed_url: "",
+    active: true,
   }
 end
 
@@ -86,5 +94,22 @@ Setting.find_or_create_by!(name: "details_page") do |setting|
   }
   setting.values = {
     title: "Placeholder",
+  }
+end
+
+Setting.find_or_create_by!(name: "service_operational_countries") do |setting|
+  setting.description = "Countries where the service is operational (ISO Country Codes). " \
+                        "Leave blank if the Droplet is available worldwide."
+  setting.schema = {
+    type: "object",
+    properties: {
+      countries: {
+        type: "array",
+        items: { type: "string" },
+      },
+    },
+  }
+  setting.values = {
+    countries: [],
   }
 end
