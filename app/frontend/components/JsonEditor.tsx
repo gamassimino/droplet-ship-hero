@@ -122,6 +122,7 @@ function JsonEditor({ schema, initialData, cancelUrl, onSubmit }: { schema: RJSF
       templates={customTheme}
       onSubmit={onSubmit}
       liveValidate={true}
+      showErrorList={false}
     />
   )
 }

@@ -8,6 +8,33 @@ class Setting < ApplicationRecord
   validate :validate_schema
   validate :validate_values
 
+  def self.method_missing(name, *args, **kwargs, &)
+    Tasks::Settings.create_defaults if Setting.count.zero?
+
+    if Setting.exists?(name: name.to_s)
+      define_singleton_method(name) { Setting.find_by(name: name.to_s) }
+
+      return send(name)
+    end
+
+    super
+  end
+
+  def self.respond_to_missing?(name, include_private = false)
+    Setting.exists?(name: name.to_s) || super
+  end
+
+  def method_missing(name, *args, **kwargs, &)
+    value = values[name.to_s]
+    return value if value.present?
+
+    super
+  end
+
+  def respond_to_missing?(name, include_private = false)
+    values.key?(name.to_s) || super
+  end
+
 private
 
   def validate_schema

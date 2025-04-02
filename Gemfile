@@ -7,6 +7,7 @@ gem "rails", "~> 8.0.2"
 gem "cancancan", "~> 3.6"
 gem "bootsnap", require: false
 gem "devise", "~> 4.9"
+gem "httparty", "~> 0.23.1"
 gem "jbuilder"
 gem "json_schemer", "~> 2.4"
 gem "kamal", require: false

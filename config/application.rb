@@ -20,7 +20,7 @@ module DropletTemplate
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
-    config.autoload_lib(ignore: %w[assets tasks])
+    config.autoload_lib(ignore: %w[assets])
 
     config.action_view.field_error_proc = Proc.new { |html_tag, instance|
       "<span class='text-orange-600'>#{html_tag}</span>".html_safe

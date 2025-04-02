@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     get "dashboard/index"
+    resource :droplet, only: %i[ create update ]
     resources :settings, only: %i[ index edit update ]
     resources :users
   end
