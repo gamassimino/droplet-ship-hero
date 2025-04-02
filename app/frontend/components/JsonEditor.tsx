@@ -6,8 +6,9 @@ import React from 'react';
 function JsonEditor({ schema, initialData, cancelUrl, onSubmit }: { schema: RJSFSchema, initialData: any, cancelUrl: string, onSubmit: (data: any) => void }) {
   const customTheme: Partial<TemplatesType> = {
     FieldTemplate: (props: FieldTemplateProps) => {
-      const { id, label, children, errors, help, required } = props;
-      const isArrayItem = id.match(/_\d+$/); // Check if this is an array item
+      const { id, label, children, errors, help, required, schema } = props;
+      const isArrayItem = id.match(/_\d+$/);
+      const isBoolean = schema.type === 'boolean';
 
       return (
         <div className="flex items-center gap-4 mb-4">
@@ -19,8 +20,18 @@ function JsonEditor({ schema, initialData, cancelUrl, onSubmit }: { schema: RJSF
               </label>
             </div>
           )}
-          <div className={`${isArrayItem ? 'w-full' : 'w-full'} [&_input]:w-full [&_input]:p-2 [&_input]:border [&_input]:border-gray-300 [&_input]:rounded-md [&_textarea]:w-full [&_textarea]:p-2 [&_textarea]:border [&_textarea]:border-gray-300 [&_textarea]:rounded-md`}>
-            {children}
+          <div className={`${isArrayItem ? 'w-full' : 'w-full'} ${isBoolean ? '' : '[&_input]:w-full [&_input]:p-2 [&_input]:border [&_input]:border-gray-300 [&_input]:rounded-md'} [&_textarea]:w-full [&_textarea]:p-2 [&_textarea]:border [&_textarea]:border-gray-300 [&_textarea]:rounded-md`}>
+            {isBoolean ? (
+              <input
+                type="checkbox"
+                id={id}
+                checked={props.formData}
+                onChange={(e) => props.onChange(e.target.checked)}
+                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              />
+            ) : (
+              children
+            )}
             {errors && (
               <div className="mt-1 text-sm text-red-600">
                 {errors}
@@ -68,8 +79,7 @@ function JsonEditor({ schema, initialData, cancelUrl, onSubmit }: { schema: RJSF
       RemoveButton: (props: IconButtonProps) => null
     },
     ArrayFieldTemplate: (props: ArrayFieldTemplateProps) => {
-      const { items, canAdd, onAddClick, title } = props;
-      const elementName = title?.replace(/s$/, ''); // Remove trailing 's' if present
+      const { items, canAdd, onAddClick } = props;
       return (
         <div className="mb-4">
           {items.map((item) => (
@@ -95,7 +105,7 @@ function JsonEditor({ schema, initialData, cancelUrl, onSubmit }: { schema: RJSF
                 className="inline-flex items-center text-sm bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-md"
                 onClick={onAddClick}
               >
-                Add {elementName}
+                Add
               </button>
             )}
           </div>
