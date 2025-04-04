@@ -2,6 +2,8 @@
 
 Droplets are integrations between third-party services and Fluid. This is a repository intended to be used as an example for creating Droplets.
 
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/fluid-commerce/droplet-template)
+
 ### Technology Stack
 
 ![PostgreSQL 17](https://img.shields.io/badge/PostgreSQL-17-336791?logo=postgresql&logoColor=white)
@@ -12,8 +14,6 @@ Droplets are integrations between third-party services and Fluid. This is a repo
 ![Font Awesome](https://img.shields.io/badge/Font_Awesome-6.7.2-528DD7?logo=fontawesome&logoColor=white)
 ![Tailwind CSS 4.0](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?logo=tailwindcss&logoColor=white)
 <br>
-
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/fluid-commerce/droplet-template)
 
 ### Running locally
 
