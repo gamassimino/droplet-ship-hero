@@ -1,8 +1,6 @@
 require "test_helper"
 
 describe Setting do
-  fixtures(:settings)
-
   describe "validations" do
     it "is invalid without a name" do
       setting = Setting.new(schema: {}, values: {})
@@ -66,13 +64,21 @@ describe Setting do
     end
 
     it "is valid with a valid schema and values that match the schema" do
-      setting = settings(:marketplace_page)
+      setting = Setting.marketplace_page
       setting.values = {
         title: "Droplet Name",
         summary: "What the droplet is for",
         logo_url: "https://example.com/logo.png",
       }
       _(setting.valid?).must_equal true
+    end
+
+    it "finds by the method name at the class level" do
+      _(Setting.droplet).must_equal Setting.find_by(name: "droplet")
+    end
+
+    it "uses the method name as a key to the values at the instance level" do
+      _(Setting.fluid_api.base_url).must_equal "https://api.fluid.com"
     end
   end
 end
