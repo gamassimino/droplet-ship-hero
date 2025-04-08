@@ -1,0 +1,29 @@
+cart_updated:
+  resource: cart
+  event: updated
+  active: true
+
+cart_abandoned:
+  resource: cart
+  event: abandoned
+  active: true
+
+order_completed:
+  resource: order
+  event: completed
+  active: true
+
+order_cancelled:
+  resource: order
+  event: cancelled
+  active: true
+
+order_refunded:
+  resource: order
+  event: refunded
+  active: true
+
+order_shipped:
+  resource: order
+  event: shipped
+  active: true
