@@ -2,6 +2,7 @@ module Tasks
   class Settings
     class << self
       def create_defaults
+        create_host_server_setting
         create_fluid_api_setting
         create_droplet_setting
         create_marketplace_page_setting
@@ -21,6 +22,22 @@ module Tasks
       end
 
     private
+
+      def create_host_server_setting
+        Setting.find_or_create_by!(name: "host_server") do |setting|
+          setting.description = "Settings for the hosting server"
+          setting.schema = {
+            type: "object",
+            required: %w[ base_url ],
+            properties: {
+              base_url: { type: "string" },
+            },
+          }
+          setting.values = {
+            base_url: "http://localhost:3000",
+          }
+        end
+      end
 
       def create_fluid_api_setting
         Setting.find_or_create_by!(name: "fluid_api") do |setting|
