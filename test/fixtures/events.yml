@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+order_completed:
+  identifier: order_123
+  name: order_completed
+  payload: { "order_id": "123", "status": "completed", "total": 99.99 }
+  timestamp: <%= Time.current %>
+  status: 0
+
+product_updated:
+  identifier: product_456
+  name: product_updated
+  payload: { "product_id": "456", "name": "Updated Product", "price": 19.99 }
+  timestamp: <%= Time.current %>
+  status: 1
+
+cart_abandoned:
+  identifier: cart_789
+  name: cart_abandoned
+  payload:
+    {
+      "cart_id": "789",
+      "items": [{ "id": "item_1", "quantity": 2 }],
+      "total": 39.99
+    }
+  timestamp: <%= Time.current %>
+  status: 2
