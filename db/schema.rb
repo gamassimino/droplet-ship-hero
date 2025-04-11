@@ -10,9 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_09_101245) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_11_062613) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "companies", force: :cascade do |t|
+    t.string "fluid_shop", null: false
+    t.string "authentication_token", null: false
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["authentication_token"], name: "index_companies_on_authentication_token", unique: true
+  end
 
   create_table "events", force: :cascade do |t|
     t.string "identifier"

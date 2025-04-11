@@ -1,0 +1,9 @@
+acme:
+  name: Acme Corporation
+  fluid_shop: acme_shop
+  authentication_token: acme_token
+
+globex:
+  name: Globex Corporation
+  fluid_shop: globex_shop
+  authentication_token: globex_token
