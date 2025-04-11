@@ -31,9 +31,9 @@ describe Company do
       existing_company = companies(:acme)
       company = companies(:globex).dup
       company.authentication_token = existing_company.authentication_token
-      
+
       _(company).wont_be :valid?
       _(company.errors[:authentication_token]).must_include "has already been taken"
     end
   end
-end 
+end

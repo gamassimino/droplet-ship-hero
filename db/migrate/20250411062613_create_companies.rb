@@ -7,7 +7,7 @@ class CreateCompanies < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    
+
     add_index :companies, :authentication_token, unique: true
   end
 end
