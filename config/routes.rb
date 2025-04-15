@@ -3,6 +3,8 @@ Rails.application.routes.draw do
 
   devise_for :users
 
+  post "webhook", to: "webhooks#create", as: :webhook
+
   namespace :admin do
     get "dashboard/index"
     resource :droplet, only: %i[ create update ]

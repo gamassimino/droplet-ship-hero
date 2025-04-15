@@ -1,13 +1,21 @@
+# Companies fixture for testing
+
 acme:
   name: Acme Corporation
   fluid_shop: acme_shop
   authentication_token: acme_token
   fluid_company_id: 1234567890
-  company_droplet_uuid: 1234567890
+  company_droplet_uuid: acme-uuid-123
+  service_company_id: acme-123
+  active: true
+  webhook_verification_token: acme-verify-token
 
 globex:
   name: Globex Corporation
   fluid_shop: globex_shop
   authentication_token: globex_token
-  fluid_company_id: 1234567890
-  company_droplet_uuid: 1234567890
+  fluid_company_id: 9876543210
+  company_droplet_uuid: globex-uuid-456
+  service_company_id: globex-456
+  active: true
+  webhook_verification_token: globex-verify-token
