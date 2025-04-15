@@ -1,6 +1,9 @@
 require "test_helper"
 
 describe Event do
+  fixtures(:events)
+  fixtures(:companies)
+
   describe "validations" do
     it "is valid with all attributes" do
       event = events(:order_completed)
@@ -40,6 +43,20 @@ describe Event do
       event.status = nil
       _(event.valid?).must_equal false
       _(event.errors[:status]).wont_be_empty
+    end
+
+    it "is invalid without company" do
+      event = events(:order_completed)
+      event.company = nil
+      _(event.valid?).must_equal false
+      _(event.errors[:company]).wont_be_empty
+    end
+  end
+
+  describe "associations" do
+    it "belongs to a company" do
+      event = events(:order_completed)
+      _(event.company).must_equal companies(:acme)
     end
   end
 
@@ -87,7 +104,8 @@ describe Event do
           name: name,
           payload: { test: true },
           timestamp: Time.current,
-          status: :pending
+          status: :pending,
+          company: companies(:acme)
         )
         _(event.valid?).must_equal true, "Event should be valid with name: #{name}"
       end
