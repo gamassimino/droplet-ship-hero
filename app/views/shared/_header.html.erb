@@ -10,6 +10,7 @@
       </div>
     <% end %>
   </div>
+  <span class="text-sm text-gray-600 mr-4"><%= current_user.email %></span>
   <%= button_to "Sign out",
                 destroy_user_session_path,
                 method: :delete,
