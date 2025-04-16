@@ -3,6 +3,7 @@ require "test_helper"
 describe FluidClient do
   describe "#payload" do
     it "returns a valid payload" do
+      Tasks::Settings.create_defaults
       client = FluidClient.new
 
       _(client.droplets.payload).must_equal({
