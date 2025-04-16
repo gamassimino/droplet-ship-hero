@@ -10,9 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_09_101245) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_15_073538) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "companies", force: :cascade do |t|
+    t.string "fluid_shop", null: false
+    t.string "authentication_token", null: false
+    t.string "name", null: false
+    t.jsonb "settings", default: {}
+    t.string "webhook_verification_token"
+    t.bigint "fluid_company_id", null: false
+    t.string "service_company_id"
+    t.string "company_droplet_uuid"
+    t.boolean "active", default: false
+    t.datetime "uninstalled_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_companies_on_active"
+    t.index ["authentication_token"], name: "index_companies_on_authentication_token", unique: true
+    t.index ["company_droplet_uuid"], name: "index_companies_on_company_droplet_uuid"
+    t.index ["fluid_company_id"], name: "index_companies_on_fluid_company_id"
+    t.index ["fluid_shop"], name: "index_companies_on_fluid_shop"
+  end
 
   create_table "events", force: :cascade do |t|
     t.string "identifier"
@@ -22,6 +42,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_09_101245) do
     t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "company_id", null: false
+    t.index ["company_id"], name: "index_events_on_company_id"
     t.index ["identifier"], name: "index_events_on_identifier"
     t.index ["name"], name: "index_events_on_name"
   end
@@ -56,4 +78,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_09_101245) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  add_foreign_key "events", "companies"
 end

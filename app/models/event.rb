@@ -1,4 +1,6 @@
 class Event < ApplicationRecord
+  belongs_to :company
+
   enum :status, {
     pending: 0,
     processed: 1,
