@@ -1,0 +1,19 @@
+name: Linear Issue Validation
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+  issue_comment:
+    types: [created, edited, deleted]
+
+jobs:
+  validate-linear-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate Linear issue reference
+        uses: fluid-commerce/heavy/.github/actions/linear-issue-validator@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
