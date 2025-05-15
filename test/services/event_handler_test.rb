@@ -44,7 +44,7 @@ describe EventHandler do
     EventHandler::EVENT_HANDLERS.clear
     EventHandler.register_handler("company_droplet.created", DropletInstalledJob)
     EventHandler.register_handler("company_droplet.uninstalled", DropletUninstalledJob)
-    EventHandler.register_handler("company_droplet.installed", DropletInstalledJob)
+    EventHandler.register_handler("company_droplet.installed", DropletReinstalledJob)
   end
 
   describe "handler registration and routing" do

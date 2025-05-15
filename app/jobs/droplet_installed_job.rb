@@ -1,6 +1,4 @@
-class DropletInstalledJob < ApplicationJob
-  queue_as :default
-
+class DropletInstalledJob < WebhookEventJob
   # payload - Hash received from the webhook controller.
   # Expected structure (example):
   # {
@@ -13,8 +11,10 @@ class DropletInstalledJob < ApplicationJob
   #     "webhook_verification_token" => "verify",
   #   }
   # }
-  def perform(payload)
-    company_attributes = payload.fetch("company", {})
+  def process_webhook
+    # Validate required keys in payload
+    validate_payload_keys("company")
+    company_attributes = get_payload.fetch("company", {})
 
     company = Company.new(company_attributes.slice(
       "fluid_shop",
@@ -32,8 +32,5 @@ class DropletInstalledJob < ApplicationJob
         "[DropletInstalledJob] Failed to create company: #{company.errors.full_messages.join(', ')}"
       )
     end
-  rescue StandardError => e
-    Rails.logger.error("[DropletInstalledJob] Error: #{e.class} - #{e.message}")
-    raise
   end
 end
