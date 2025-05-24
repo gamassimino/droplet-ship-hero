@@ -1,0 +1,27 @@
+title: Fluid Droplets
+description: Documentation creating integrations with the Fluid platform
+baseurl: "/droplet-template"
+url: "https://fluid-commerce.github.io"
+
+# Theme
+theme: just-the-docs
+remote_theme: just-the-docs/just-the-docs
+
+# Enable plugins
+plugins:
+  - jekyll-sitemap
+
+# Just the Docs theme configuration
+color_scheme: light
+search_enabled: true
+heading_anchors: true
+
+# Navigation structure
+nav_sort: case_insensitive
+
+# Footer content
+footer_content: "Copyright &copy; 2025 Fluid Tech, Inc. Distributed under the MIT License."
+
+# Enable Mermaid diagrams
+mermaid:
+  version: "11.6.0"
