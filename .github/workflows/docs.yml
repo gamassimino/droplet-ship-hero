@@ -1,0 +1,25 @@
+name: Build and Deploy Documentation
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'docs/**' ]
+  pull_request:
+    branches: [ main ]
+    paths: [ 'docs/**' ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.4.2'
+        working-directory: ./docs
+        bundler-cache: true
+
+    - name: Build site
+      working-directory: ./docs
+      run: bundle exec jekyll build
