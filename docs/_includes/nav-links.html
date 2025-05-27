@@ -1,0 +1,26 @@
+{% assign pages = site.pages | where: "parent", page.parent | sort: "nav_order" %}
+{% for p in pages %}
+  {% if p.url == page.url %}
+    {% assign current_index = forloop.index0 %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+{% assign prev_index = current_index | minus: 1 %}
+{% assign next_index = current_index | plus: 1 %}
+
+<div class="navigation-links">
+  {% if prev_index >= 0 %}
+    <div style="float: left;">
+      <a href="{{ pages[prev_index].url | relative_url }}" class="btn">← {{ pages[prev_index].title }}</a>
+    </div>
+  {% endif %}
+
+  {% if next_index < pages.size %}
+    <div style="float: right;">
+      <a href="{{ pages[next_index].url | relative_url }}" class="btn">{{ pages[next_index].title }} →</a>
+    </div>
+  {% endif %}
+
+  <div style="clear: both;"></div>
+</div>
