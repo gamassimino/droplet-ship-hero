@@ -2,7 +2,7 @@
 
 Droplets are integrations between third-party services and Fluid. This is a repository intended to be used as an example for creating Droplets.
 
-Documentation can be found in the [project's wiki](https://github.com/fluid-commerce/droplet-template/wiki)
+Documentation can be found in the [project's GitHub page](https://fluid-commerce.github.io/droplet-template/)
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/fluid-commerce/droplet-template)
 
