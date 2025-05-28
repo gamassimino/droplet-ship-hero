@@ -28,9 +28,9 @@ stateDiagram-v2
     SwiftlyShip --> DropletService : API calls
 
     %% Define color classes
-    classDef fluidStyle fill:#F6C75B,stroke:#D4A017,stroke-width:2px,color:#FFF
-    classDef dropletStyle fill:#6DCDB0,stroke:#4A9B8E,stroke-width:2px,color:#FFF
-    classDef swiftlyStyle fill:#C2417F,stroke:#8E2C4F,stroke-width:2px,color:#FFF
+    classDef fluidStyle fill:#0894ff,stroke:#0894ff,color:#FFF
+    classDef dropletStyle fill:#c959dd,stroke:#c959dd,color:#FFF
+    classDef swiftlyStyle fill:#ff9004,stroke:#ff9004,color:#FFF
 
     %% Apply styles to entities
     class FluidPlatform fluidStyle
@@ -40,15 +40,15 @@ stateDiagram-v2
 
 Here's how an order could flow through the system:
 
-1. <span style="background-color: #F6C75B; color: #FFF; padding: 0 3px; border-radius: 4px">FluidPlatform</span> notifies the <span style="background-color: #6DCDB0; color: #FFF; padding: 0 3px; border-radius: 4px">DropletService</span> that an order is ready to ship through an `order_completed` webhook
-2. The <span style="background-color: #6DCDB0; color: #FFF; padding: 0 3px; border-radius: 4px">DropletService</span> forwards the order to <span style="background-color: #C2417F; color: #FFF; padding: 0 3px; border-radius: 4px">SwiftlyShip</span> for fulfillment through an API call
-3. <span style="background-color: #C2417F; color: #FFF; padding: 0 3px; border-radius: 4px">SwiftlyShip</span> processes the order and notifies the <span style="background-color: #6DCDB0; color: #FFF; padding: 0 3px; border-radius: 4px">DropletService</span> when it ships through an API call
-4. The <span style="background-color: #6DCDB0; color: #FFF; padding: 0 3px; border-radius: 4px">DropletService</span> updates the <span style="background-color: #F6C75B; color: #FFF; padding: 0 3px; border-radius: 4px">FluidPlatform</span> with the shipping status through an API call and prepares data for the shipping dashboard it will display within Fluid
+1. <span style="background-color: #0894ff; color: #FFF; padding: 0 3px; border-radius: 4px">FluidPlatform</span> notifies the <span style="background-color: #c959dd; color: #FFF; padding: 0 3px; border-radius: 4px">DropletService</span> that an order is ready to ship through an `order_completed` webhook
+2. The <span style="background-color: #c959dd; color: #FFF; padding: 0 3px; border-radius: 4px">DropletService</span> forwards the order to <span style="background-color: #ff9004; color: #FFF; padding: 0 3px; border-radius: 4px">SwiftlyShip</span> for fulfillment through an API call
+3. <span style="background-color: #ff9004; color: #FFF; padding: 0 3px; border-radius: 4px">SwiftlyShip</span> processes the order and notifies the <span style="background-color: #c959dd; color: #FFF; padding: 0 3px; border-radius: 4px">DropletService</span> when it ships through an API call
+4. The <span style="background-color: #c959dd; color: #FFF; padding: 0 3px; border-radius: 4px">DropletService</span> updates the <span style="background-color: #0894ff; color: #FFF; padding: 0 3px; border-radius: 4px">FluidPlatform</span> with the shipping status through an API call and prepares data for the shipping dashboard it will display within Fluid
 
 Here's how shipping costs are calculated when items are added to a cart:
 
-1. <span style="background-color: #F6C75B; color: #FFF; padding: 0 3px; border-radius: 4px">FluidPlatform</span> makes a callback request to the <span style="background-color: #6DCDB0; color: #FFF; padding: 0 3px; border-radius: 4px">DropletService</span> when an item is added to a cart
-2. The <span style="background-color: #6DCDB0; color: #FFF; padding: 0 3px; border-radius: 4px">DropletService</span> calculates the shipping cost and responds to the <span style="background-color: #F6C75B; color: #FFF; padding: 0 3px; border-radius: 4px">FluidPlatform</span> with the amount
-3. The <span style="background-color: #F6C75B; color: #FFF; padding: 0 3px; border-radius: 4px">FluidPlatform</span> updates the cart with the new shipping cost
+1. <span style="background-color: #0894ff; color: #FFF; padding: 0 3px; border-radius: 4px">FluidPlatform</span> makes a callback request to the <span style="background-color: #c959dd; color: #FFF; padding: 0 3px; border-radius: 4px">DropletService</span> when an item is added to a cart
+2. The <span style="background-color: #c959dd; color: #FFF; padding: 0 3px; border-radius: 4px">DropletService</span> calculates the shipping cost and responds to the <span style="background-color: #0894ff; color: #FFF; padding: 0 3px; border-radius: 4px">FluidPlatform</span> with the amount
+3. The <span style="background-color: #0894ff; color: #FFF; padding: 0 3px; border-radius: 4px">FluidPlatform</span> updates the cart with the new shipping cost
 
 Note: While we show the Droplet Service and SwiftlyShip as separate services in these examples, they could be implemented as a single service. We separate them in our documentation to show their different responsibilities: the Droplet Service coordinates communication with Fluid's platform, while SwiftlyShip manages the core shipping functionality.

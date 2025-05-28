@@ -1,0 +1,65 @@
+a:not([class]) {
+  text-decoration: none;
+  background-image: linear-gradient(to right, #0894ff, #6977ee);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  &:hover {
+    background-image: linear-gradient(to right, #ff9004, #ff5f2c);
+  }
+}
+
+h2, h3, h4, h5, h6 {
+  font-family: $heading-font-family;
+}
+
+.btn {
+  font-weight: 400;
+  background: transparent;
+  border: 1px solid #27262b;
+  color: #27262b;
+  text-decoration: none;
+  padding: 0.2rem 0.8rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #27262b;
+    color: white;
+    text-decoration: none;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $heading-font-family;
+}
+
+.site-title {
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(300deg, #0894ff, #c959dd 42%, #ff2e54 68%, #ff9004);
+  -webkit-background-clip: text;
+  background-clip: text;
+  font-weight: 700;
+
+  &:hover {
+    -webkit-text-fill-color: transparent;
+    background-image: linear-gradient(120deg, #0894ff, #c959dd 42%, #ff2e54 68%, #ff9004);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+}
+
+#site-nav {
+  // Outer menu items
+  > .nav-list > .nav-list-item > a,
+  > .nav-list > .nav-list-item > .nav-list-expander {
+    color: #FFF;
+  }
+
+  // Inner menu items
+  .nav-list .nav-list .nav-list-item a,
+  .nav-list .nav-list .nav-list-item .nav-list-expander {
+    color: #81859F;
+  }
+}
