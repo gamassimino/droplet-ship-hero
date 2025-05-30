@@ -12,13 +12,13 @@
 <div class="navigation-links">
   {% if prev_index >= 0 %}
     <div style="float: left;">
-      <a href="{{ pages[prev_index].url | relative_url }}" class="btn">← {{ pages[prev_index].title }}</a>
+      <a href="{{ pages[prev_index].url | relative_url }}" class="btn"><span style="margin-right: 0.5rem; font-size: 1.3rem;">‹</span>{{ pages[prev_index].title }}</a>
     </div>
   {% endif %}
 
   {% if next_index < pages.size %}
     <div style="float: right;">
-      <a href="{{ pages[next_index].url | relative_url }}" class="btn">{{ pages[next_index].title }} →</a>
+      <a href="{{ pages[next_index].url | relative_url }}" class="btn">{{ pages[next_index].title }}<span style="margin-left: 0.5rem; font-size: 1.3rem;">›</span></a>
     </div>
   {% endif %}
 
