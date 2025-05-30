@@ -7,7 +7,32 @@ nav_order: 3
 
 ## Creating a Company
 
+A company can be created through [Fluid's sign-up page](https://admin.fluid.app/sign-up).
 
+Alternatively, a company can be created through the API through a `POST` to the `/api/company` endpoint.
+
+A curl statement could look like this:
+```bash
+curl -i \
+  -X POST https://fluid.app/api/company \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "user": {
+    "first_name": "John",
+    "last_name": "D`oh",
+    "email": "john@swiftlyship.com",
+    "password": "myvoiceismypassportverifyme"
+  },
+  "company": {
+    "name": "SwiftlyShip",
+    "subdomain": "swiftly-ship"
+  }
+}'
+```
+
+The user information creates the company's administrator. The company's subdomain (e.g., `swiftly-ship.fluid.app`) serves as its unique identifier in the Fluid platform and is referred to as the "fluid shop".
+
+Sign to the admin's account at `https://admin.fluid.app`.
 
 ### Accessing the API
 
