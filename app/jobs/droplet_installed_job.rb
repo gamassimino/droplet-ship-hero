@@ -16,15 +16,16 @@ class DropletInstalledJob < WebhookEventJob
     validate_payload_keys("company")
     company_attributes = get_payload.fetch("company", {})
 
-    company = Company.new(company_attributes.slice(
+    company = Company.find_by(fluid_shop: company_attributes["fluid_shop"]) || Company.new
+    company.assign_attributes(company_attributes.slice(
       "fluid_shop",
       "name",
       "fluid_company_id",
-      "company_droplet_uuid",
       "authentication_token",
       "webhook_verification_token",
+      "droplet_installation_uuid"
     ))
-
+    company.company_droplet_uuid = company_attributes.fetch("droplet_uuid")
     company.active = true
 
     unless company.save

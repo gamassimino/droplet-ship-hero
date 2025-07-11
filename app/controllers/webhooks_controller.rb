@@ -20,7 +20,7 @@ class WebhooksController < ApplicationController
 private
 
   def droplet_installed_for_first_time?
-    params[:resource] == "company_droplet" && params[:event] == "created"
+    params[:resource] == "droplet" && params[:event] == "installed"
   end
 
   def authenticate_webhook_token

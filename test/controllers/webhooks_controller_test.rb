@@ -4,20 +4,20 @@ require "test_helper"
 describe WebhooksController do
   fixtures(:companies)
 
-  describe "company_droplet events" do
-    it "handles company_droplet created event" do
+  describe "droplet events" do
+    it "handles droplet installed event" do
       company_data = {
         fluid_shop: "test-shop",
         name: "Test Company",
         fluid_company_id: 123456,
-        company_droplet_uuid: "abc-123-xyz",
+        droplet_uuid: "abc-123-xyz",
         authentication_token: "secret-token-123",
         webhook_verification_token: "verify-token-456",
       }
 
       post webhook_url, params: {
-        resource: "company_droplet",
-        event: "created",
+        resource: "droplet",
+        event: "installed",
         company: company_data,
       }, as: :json
 
@@ -33,10 +33,10 @@ describe WebhooksController do
       _(company).must_be :active?
     end
 
-    it "handles company_droplet uninstalled event with valid authentication token in header" do
+    it "handles droplet uninstalled event with valid authentication token in header" do
       company = companies(:acme)
       post webhook_url, params: {
-        resource: "company_droplet",
+        resource: "droplet",
         event: "uninstalled",
         company: {
           company_droplet_uuid: company.company_droplet_uuid,
@@ -52,17 +52,18 @@ describe WebhooksController do
       _(company.uninstalled_at).wont_be_nil
     end
 
-    it "handles company_droplet installed event with valid token" do
-      # First mark the company as uninstalled
+    it "updates existing company on droplet installed event" do
       company = companies(:acme)
-      company.update(uninstalled_at: Time.current)
 
       post webhook_url, params: {
-        resource: "company_droplet",
+        resource: "droplet",
         event: "installed",
         company: {
-          company_droplet_uuid: company.company_droplet_uuid,
+          fluid_shop: company.fluid_shop,
+          name: "Updated Company Name",
           fluid_company_id: company.fluid_company_id,
+          droplet_uuid: "updated-uuid-456",
+          authentication_token: "updated-token-456",
           webhook_verification_token: company.webhook_verification_token,
         },
       }, headers: { "AUTH_TOKEN" => company.webhook_verification_token }, as: :json
@@ -72,13 +73,16 @@ describe WebhooksController do
       perform_enqueued_jobs
 
       company.reload
-      _(company.uninstalled_at).must_be_nil
+      _(company.name).must_equal "Updated Company Name"
+      _(company.company_droplet_uuid).must_equal "updated-uuid-456"
+      _(company.authentication_token).must_equal "updated-token-456"
+      _(company).must_be :active?
     end
 
     it "rejects event when webhook verification token is invalid" do
       company = companies(:acme)
       post webhook_url, params: {
-        resource: "company_droplet",
+        resource: "droplet",
         event: "uninstalled",
         company: {
           company_droplet_uuid: company.company_droplet_uuid,
@@ -94,7 +98,7 @@ describe WebhooksController do
     it "rejects event when authentication token in header is invalid" do
       company = companies(:acme)
       post webhook_url, params: {
-        resource: "company_droplet",
+        resource: "droplet",
         event: "uninstalled",
         company: {
           company_droplet_uuid: company.company_droplet_uuid,
@@ -108,7 +112,7 @@ describe WebhooksController do
 
     it "returns 404 when company is not found" do
       post webhook_url, params: {
-        resource: "company_droplet",
+        resource: "droplet",
         event: "uninstalled",
         company: {
           company_droplet_uuid: "non-existent-uuid",
@@ -124,7 +128,7 @@ describe WebhooksController do
     it "relies on company payload for authentication if auth token is not provided" do
       company = companies(:acme)
       post webhook_url, params: {
-        resource: "company_droplet",
+        resource: "droplet",
         event: "uninstalled",
         company: {
           company_droplet_uuid: company.company_droplet_uuid,
@@ -141,12 +145,12 @@ describe WebhooksController do
       _(company.uninstalled_at).wont_be_nil
     end
 
-    it "bypasses verification for company_droplet created event" do
+    it "bypasses verification for droplet installed event" do
       company_data = {
         fluid_shop: "new-shop",
         name: "New Company",
         fluid_company_id: 999999,
-        company_droplet_uuid: "new-uuid-123",
+        droplet_uuid: "new-uuid-123",
         authentication_token: "new-secret-token",
         webhook_verification_token: "new-verify-token",
       }
@@ -154,8 +158,8 @@ describe WebhooksController do
       # No webhook_verification_token provided, but should still succeed
 
       post webhook_url, params: {
-        resource: "company_droplet",
-        event: "created",
+        resource: "droplet",
+        event: "installed",
         company: company_data,
       }, as: :json
 
