@@ -10,6 +10,7 @@ describe DropletInstalledJob do
         "droplet_uuid" => "test-uuid-123",
         "authentication_token" => "unique-test-auth-token",
         "webhook_verification_token" => "test-verify-token",
+        "droplet_installation_uuid" => "test-installation-uuid-123",
       }
 
       payload = { "company" => company_data }
@@ -26,6 +27,7 @@ describe DropletInstalledJob do
       _(company.company_droplet_uuid).must_equal "test-uuid-123"
       _(company.authentication_token).must_equal "unique-test-auth-token"
       _(company.webhook_verification_token).must_equal "test-verify-token"
+      _(company.droplet_installation_uuid).must_equal "test-installation-uuid-123"
       _(company).must_be :active?
     end
 
@@ -47,6 +49,7 @@ describe DropletInstalledJob do
         "droplet_uuid" => "new-uuid-123",
         "authentication_token" => "unique-new-auth-token",
         "webhook_verification_token" => "new-verify-token",
+        "droplet_installation_uuid" => "new-installation-uuid-456",
       }
 
       payload = { "company" => company_data }
@@ -58,6 +61,7 @@ describe DropletInstalledJob do
       _(existing_company.company_droplet_uuid).must_equal "new-uuid-123"
       _(existing_company.authentication_token).must_equal "unique-new-auth-token"
       _(existing_company.webhook_verification_token).must_equal "new-verify-token"
+      _(existing_company.droplet_installation_uuid).must_equal "new-installation-uuid-456"
       _(existing_company).must_be :active?
     end
 

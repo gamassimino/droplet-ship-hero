@@ -1,0 +1,46 @@
+droplet:
+  name: droplet
+  schema: '{"type": "object", "properties": {"uuid": {"type": "string"}, "name": {"type": "string"}, "active": {"type": "boolean"}, "embed_url": {"type": "string"}}}'
+  values:
+    uuid: "existing-uuid"
+    name: "Existing Droplet"
+    active: true
+    embed_url: "https://example.com/existing"
+
+fluid_api:
+  name: fluid_api
+  schema: '{"type": "object", "properties": {"base_url": {"type": "string"}, "api_key": {"type": "string"}}}'
+  values:
+    base_url: "https://api.fluid.com"
+    api_key: "test-api-key"
+
+fluid_webhook:
+  name: fluid_webhook
+  schema: '{"type": "object", "properties": {"url": {"type": "string"}, "auth_token": {"type": "string"}, "http_method": {"type": "string"}, "webhook_id": {"type": "string"}}}'
+  values:
+    url: "http://localhost:3200/webhook"
+    auth_token: "secret_token"
+    http_method: "POST"
+    webhook_id: "existing-webhook-id"
+
+marketplace_page:
+  name: marketplace_page
+  schema: '{"type": "object", "properties": {"title": {"type": "string"}, "logo_url": {"type": ["string", "null"]}, "summary": {"type": ["string", "null"]}}}'
+  values:
+    title: "Marketplace Title"
+    logo_url: null
+    summary: null
+
+details_page:
+  name: details_page
+  schema: '{"type": "object", "properties": {"title": {"type": "string"}, "logo_url": {"type": ["string", "null"]}, "summary": {"type": ["string", "null"]}}}'
+  values:
+    title: "Details Title"
+    logo_url: null
+    summary: null
+
+service_operational_countries:
+  name: service_operational_countries
+  schema: '{"type": "object", "properties": {"countries": {"type": "array", "items": {"type": "string"}}}}'
+  values:
+    countries: [] 

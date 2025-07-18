@@ -1,25 +1,21 @@
 class Admin::DropletsController < AdminController
   def create
-    response = client.droplets.create
-    setting = Setting.droplet
-    setting.values = response["droplet"].slice("uuid", "name", "active", "embed_url")
-    setting.save!
+    result = DropletUseCase::Create.call
 
-    redirect_to admin_dashboard_index_path, notice: "Droplet created successfully"
-  rescue FluidClient::Error => e
-    redirect_to admin_dashboard_index_path, alert: "Failed to create droplet: #{e.message}"
+    if result[:success]
+      redirect_to admin_dashboard_index_path, notice: "Droplet created successfully"
+    else
+      redirect_to admin_dashboard_index_path, alert: "Failed to create droplet: #{result[:error]}"
+    end
   end
 
   def update
-    client.droplets.update
-    redirect_to admin_dashboard_index_path, notice: "Droplet created successfully"
-  rescue FluidClient::Error => e
-    redirect_to admin_dashboard_index_path, alert: "Failed to update droplet: #{e.message}"
-  end
+    result = DropletUseCase::Update.call
 
-private
-
-  def client
-    @client ||= FluidClient.new
+    if result[:success]
+      redirect_to admin_dashboard_index_path, notice: "Droplet updated successfully"
+    else
+      redirect_to admin_dashboard_index_path, alert: "Failed to update droplet: #{result[:error]}"
+    end
   end
 end

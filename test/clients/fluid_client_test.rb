@@ -8,15 +8,20 @@ describe FluidClient do
 
       _(client.droplets.payload).must_equal({
         "droplet" => {
-          "name" => "Placeholder",
+          "name" => "Existing Droplet",
+          "uuid" => "existing-uuid",
           "active" => true,
-          "embed_url" => "https://example.com",
+          "embed_url" => "https://example.com/existing",
           "settings" => {
             "marketplace_page" => {
-              "title" => "Placeholder",
+              "title" => "Marketplace Title",
+              "logo_url" => nil,
+              "summary" => nil,
             },
             "details_page" => {
-              "title" => "Placeholder",
+              "title" => "Details Title",
+              "logo_url" => nil,
+              "summary" => nil,
             },
             "service_operational_countries" => [],
           },

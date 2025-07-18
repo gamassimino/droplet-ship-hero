@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_15_073538) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_17_195312) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -27,6 +27,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_073538) do
     t.datetime "uninstalled_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "droplet_installation_uuid"
     t.index ["active"], name: "index_companies_on_active"
     t.index ["authentication_token"], name: "index_companies_on_authentication_token", unique: true
     t.index ["company_droplet_uuid"], name: "index_companies_on_company_droplet_uuid"

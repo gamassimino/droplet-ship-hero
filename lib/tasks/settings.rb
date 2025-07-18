@@ -8,6 +8,7 @@ module Tasks
         create_marketplace_page_setting
         create_details_page_setting
         create_service_operational_countries_setting
+        create_fluid_webhook_setting
       end
 
 
@@ -18,6 +19,7 @@ module Tasks
           marketplace_page
           details_page
           service_operational_countries
+          fluid_webhook
         ]).delete_all
       end
 
@@ -162,6 +164,37 @@ module Tasks
           }
           setting.values = {
             countries: [],
+          }
+        end
+      end
+
+      def create_fluid_webhook_setting
+        Setting.find_or_create_by!(name: "fluid_webhook") do |setting|
+          setting.description = "Settings for creating webhooks in Fluid Core"
+          setting.schema = {
+            type: "object",
+            required: %w[ url auth_token http_method ],
+            properties: {
+              url: {
+                type: "string",
+                format: "uri",
+              },
+              auth_token: {
+                type: "string",
+              },
+              http_method: {
+                type: "string",
+                enum: %w[ GET POST PUT PATCH DELETE ],
+              },
+              webhook_id: {
+                type: "string",
+              },
+            },
+          }
+          setting.values = {
+            url: "https://api.example.com",
+            auth_token: "change-me",
+            http_method: "POST",
           }
         end
       end

@@ -1,6 +1,7 @@
 class FluidClient
   include HTTParty
   include Fluid::Droplets
+  include Fluid::Webhooks
 
   base_uri Setting.fluid_api.base_url
   headers "Authorization" => "Bearer #{Setting.fluid_api.api_key}", "Content-Type" => "application/json"
