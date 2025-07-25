@@ -29,4 +29,169 @@ describe FluidClient do
       })
     end
   end
+
+  describe "callback_definitions" do
+    it "returns callback_definitions resource" do
+      Tasks::Settings.create_defaults
+      client = FluidClient.new
+
+      _(client.callback_definitions).must_be_instance_of Fluid::CallbackDefinitions::Resource
+    end
+
+    it "gets callback definitions" do
+      Tasks::Settings.create_defaults
+      client = FluidClient.new
+      mock_response = { "definitions" => [] }
+
+      client.stub :get, mock_response do
+        result = client.callback_definitions.get
+
+        _(result).must_equal mock_response
+      end
+    end
+  end
+
+  describe "callback_registrations" do
+    it "returns callback_registrations resource" do
+      Tasks::Settings.create_defaults
+      client = FluidClient.new
+
+      _(client.callback_registrations).must_be_instance_of Fluid::CallbackRegistrations::Resource
+    end
+
+    it "gets callback registrations without params" do
+      Tasks::Settings.create_defaults
+      client = FluidClient.new
+      mock_response = { "callback_registrations" => [] }
+
+      client.stub :get, mock_response do
+        result = client.callback_registrations.get
+
+        _(result).must_equal mock_response
+      end
+    end
+
+    it "gets callback registrations with query params" do
+      Tasks::Settings.create_defaults
+      client = FluidClient.new
+      mock_response = { "callback_registrations" => [] }
+      params = { active: true, company_id: 123, page: 1, per_page: 50 }
+
+      client.stub :get, mock_response do
+        result = client.callback_registrations.get(params)
+
+        _(result).must_equal mock_response
+      end
+    end
+
+    it "creates callback registration" do
+      Tasks::Settings.create_defaults
+      client = FluidClient.new
+      mock_response = { "callback_registration" => { "id" => "reg-123" } }
+      attributes = {
+        definition_name: "test_callback",
+        url: "https://example.com/callback",
+        timeout_in_seconds: 30,
+        active: true,
+      }
+
+      client.stub :post, mock_response do
+        result = client.callback_registrations.create(attributes)
+
+        _(result).must_equal mock_response
+      end
+    end
+
+    it "shows callback registration" do
+      Tasks::Settings.create_defaults
+      client = FluidClient.new
+      mock_response = { "callback_registration" => { "id" => "reg-456" } }
+      uuid = "reg-456"
+
+      client.stub :get, mock_response do
+        result = client.callback_registrations.show(uuid)
+
+        _(result).must_equal mock_response
+      end
+    end
+
+    it "updates callback registration" do
+      Tasks::Settings.create_defaults
+      client = FluidClient.new
+      mock_response = { "callback_registration" => { "id" => "reg-789" } }
+      uuid = "reg-789"
+      attributes = { timeout_in_seconds: 25, active: false }
+
+      client.stub :put, mock_response do
+        result = client.callback_registrations.update(uuid, attributes)
+
+        _(result).must_equal mock_response
+      end
+    end
+
+    it "deletes callback registration" do
+      Tasks::Settings.create_defaults
+      client = FluidClient.new
+      mock_response = { "deleted" => true }
+      uuid = "reg-123"
+
+      client.stub :delete, mock_response do
+        result = client.callback_registrations.delete(uuid)
+
+        _(result).must_equal mock_response
+      end
+    end
+
+    it "generates correct payload for create" do
+      Tasks::Settings.create_defaults
+      client = FluidClient.new
+      attributes = {
+        definition_name: "test_callback",
+        url: "https://test.com/callback",
+        timeout_in_seconds: 15,
+        active: false,
+      }
+
+      expected_payload = {
+        "callback_registration" => {
+          "definition_name" => "test_callback",
+          "url" => "https://test.com/callback",
+          "timeout_in_seconds" => 15,
+          "active" => false,
+        },
+      }
+
+      _(client.callback_registrations.payload(attributes)).must_equal expected_payload
+    end
+
+    it "generates correct payload for update with uuid" do
+      Tasks::Settings.create_defaults
+      client = FluidClient.new
+      attributes = { timeout_in_seconds: 25 }
+      uuid = "reg-123"
+
+      expected_payload = {
+        "uuid" => "reg-123",
+        "callback_registration" => {
+          "definition_name" => nil,
+          "url" => nil,
+          "timeout_in_seconds" => 25,
+          "active" => true,
+        },
+      }
+
+      _(client.callback_registrations.payload(attributes, uuid)).must_equal expected_payload
+    end
+
+    it "builds query string correctly" do
+      Tasks::Settings.create_defaults
+      client = FluidClient.new
+      params = { active: true, company_id: 123, page: 1, per_page: 50, sorted_by: "created_at" }
+
+      expected_query = "?active=true&company_id=123&page=1&per_page=50&sorted_by=created_at"
+      resource = client.callback_registrations
+
+      _(resource.send(:build_query_string, params)).must_equal expected_query
+    end
+  end
 end
