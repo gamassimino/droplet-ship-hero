@@ -32,6 +32,36 @@ class DropletInstalledJob < WebhookEventJob
       Rails.logger.error(
         "[DropletInstalledJob] Failed to create company: #{company.errors.full_messages.join(', ')}"
       )
+      return
+    end
+
+    register_active_callbacks
+  end
+
+private
+
+  def register_active_callbacks
+    client = FluidClient.new
+    active_callbacks = ::Callback.active
+
+    active_callbacks.each do |callback|
+      begin
+        callback_attributes = {
+          definition_name: callback.name,
+          url: callback.url,
+          timeout_in_seconds: callback.timeout_in_seconds,
+          active: true,
+        }
+
+        client.callback_registrations.create(callback_attributes)
+        Rails.logger.info(
+          "[DropletInstalledJob] Successfully registered callback: #{callback.name}"
+        )
+      rescue => e
+        Rails.logger.error(
+          "[DropletInstalledJob] Failed to register callback #{callback.name}: #{e.message}"
+        )
+      end
     end
   end
 end

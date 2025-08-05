@@ -1,0 +1,90 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-6">
+    <%= link_to "← Back to Callbacks", admin_callbacks_path, 
+                class: "text-blue-600 hover:text-blue-900 text-sm font-medium" %>
+  </div>
+
+  <div class="bg-white rounded-lg p-6 border border-gray-100">
+    <div class="mb-6">
+      <h1 class="font-custom text-4xl font-bold text-gray-600">Edit Callback</h1>
+      <p class="text-gray-500 mt-2">Configure callback settings for <%= @callback.name %></p>
+    </div>
+
+    <%= form_with model: [:admin, @callback], local: true do |form| %>
+      <% if @callback.errors.any? %>
+        <div class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-red-800">
+                There were <%= pluralize(@callback.errors.count, "error") %> with your submission:
+              </h3>
+              <div class="mt-2 text-sm text-red-700">
+                <ul class="list-disc pl-5 space-y-1">
+                  <% @callback.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="space-y-6">
+        <div class="bg-gray-50 rounded-lg p-4">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Callback Configuration</h3>
+          
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Callback URL *
+              </label>
+              <%= form.url_field :url, 
+                                placeholder: "https://example.com/callback/taxes", 
+                                class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" %>
+              <p class="mt-1 text-sm text-gray-500">The URL where the callback will be sent</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Timeout (seconds) *
+              </label>
+              <%= form.number_field :timeout_in_seconds, 
+                                   min: 1, 
+                                   max: 20,
+                                   placeholder: "20", 
+                                   class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" %>
+              <p class="mt-1 text-sm text-gray-500">Request timeout in seconds (1-20)</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gray-50 rounded-lg p-4">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Status</h3>
+          
+          <div class="flex items-center">
+            <%= form.check_box :active, class: "h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" %>
+            <label class="ml-3 text-sm font-medium text-gray-700">
+              Active
+            </label>
+          </div>
+          <p class="mt-2 text-sm text-gray-500">
+            Enable or disable this callback. Note: Callbacks can only be activated if they have a URL and timeout configured.
+          </p>
+        </div>
+      </div>
+
+      <div class="flex justify-start space-x-3 mt-8 pt-6 border-t border-gray-200">
+        <%= form.submit "Update", 
+                       class: "bg-blue-600 hover:bg-blue-700 !text-white font-bold py-2 px-4 rounded" %>
+        <%= link_to "Cancel", admin_callbacks_path, 
+                   class: "bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-2 px-4 rounded" %>
+      </div>
+    <% end %>
+  </div>
+</div> 

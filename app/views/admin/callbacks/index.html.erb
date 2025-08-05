@@ -1,0 +1,62 @@
+<div class="flex items-center justify-between">
+  <div class="flex items-center gap-2">
+    <h1 class="font-custom text-4xl font-bold text-gray-600">Callbacks</h1>
+  </div>
+  <%= button_to "Sync Callbacks", sync_admin_callbacks_path, 
+                method: :post, 
+                class: "bg-blue-600 hover:bg-orange-600 !text-white px-4 py-2 rounded-md",
+                data: { confirm: "Are you sure you want to sync callbacks?" } %>
+</div>
+
+<div class="bg-white rounded-lg p-6 border border-gray-100">
+  <% if @callbacks.any? %>
+          <table class="w-full">
+        <thead class="bg-slate-50 border-b border-gray-400">
+          <tr>
+            <th class="pl-2 text-left text-slate-600">Name</th>
+            <th class="pl-2 text-left text-slate-600">Description</th>
+            <th class="pl-2 text-left text-slate-600">URL</th>
+            <th class="pl-2 text-left text-slate-600">Status</th>
+            <th class="pl-2 text-left text-slate-600">Actions</th>
+          </tr>
+        </thead>
+      <tbody>
+        <% @callbacks.each do |callback| %>
+          <tr class="odd:bg-white even:bg-slate-50 hover:bg-slate-100">
+            <td class="pl-2 text-left text-gray-600 font-medium"><%= callback.name %></td>
+            <td class="pl-2 text-left text-gray-600"><%= truncate(callback.description, length: 60) %></td>
+            <td class="pl-2 text-left text-gray-600">
+              <% if callback.url.present? %>
+                <%= truncate(callback.url, length: 40) %>
+              <% else %>
+                <span class="text-gray-400">Not set</span>
+              <% end %>
+            </td>
+            <td class="pl-2 text-left text-gray-600">
+              <% if callback.active? %>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  Active
+                </span>
+              <% else %>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                  Inactive
+                </span>
+              <% end %>
+            </td>
+            <td class="pl-2 text-left text-gray-600">
+              <div class="flex gap-4">
+                <%= link_to "View", admin_callback_path(callback), class: "text-blue-600 hover:text-orange-600" %>
+                <%= link_to "Edit", edit_admin_callback_path(callback), class: "text-blue-600 hover:text-orange-600" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <div class="text-center py-8">
+      <h3 class="text-base font-medium text-gray-900 mb-1">No callbacks found</h3>
+      <p class="text-sm text-gray-500">Get started by syncing callbacks from your external service.</p>
+    </div>
+  <% end %>
+</div> 

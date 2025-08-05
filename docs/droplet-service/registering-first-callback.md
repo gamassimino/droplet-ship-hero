@@ -39,30 +39,7 @@ For example, here is the definition of the `test_callback_system` callback.
 ```json
 {
   "name": "test_callback_system",
-  "description": "Test callback system",
-  "example_response": {
-    "message": "Hello, world!"
-  },
-  "request_schema": {
-    "type": "object",
-    "properties": {
-      "message": {
-        "type": "string",
-        "description": "Message to be sent"
-      }
-    },
-   "required": ["message"]
-  },
-  "response_schema": {
-    "type": "object",
-    "properties": {
-      "message": {
-        "type": "string",
-        "description": "Message to be received"
-      }
-    },
-    "required": ["message"]
-  }
+  "description": "Test callback system"
 }
 ```
 `name`
@@ -70,15 +47,6 @@ For example, here is the definition of the `test_callback_system` callback.
 
 `description`
 : A clear explanation of the callback's purpose and when it will be triggered.
-
-`example_response`
-: A sample response that demonstrates the expected format and data structure.
-
-`request_schema`
-: A [JSON schema](https://json-schema.org/) that defines the format of the callback request from Fluid.
-
-`response_schema`
-: A [JSON schema](https://json-schema.org/) that defines the required format for your callback response.
 
 To register a callback, `POST` an authenticated request to the `/api/callback/registrations` endpoint.
 

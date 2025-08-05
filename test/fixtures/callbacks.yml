@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: apply_subscription_order_discount
+  description: Apply discounts to subscription orders
+  url: https://example.com/discount-callback
+  timeout_in_seconds: 30
+  active: true
+
+two:
+  name: validate_customer_data
+  description: Validate customer information before processing
+  url: https://example.com/validate-customer
+  timeout_in_seconds: 60
+  active: false

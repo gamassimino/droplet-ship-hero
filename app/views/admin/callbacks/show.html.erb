@@ -1,0 +1,82 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-6">
+    <%= link_to "← Back to Callbacks", admin_callbacks_path, 
+                class: "text-blue-600 hover:text-blue-900 text-sm font-medium" %>
+  </div>
+
+  <div class="bg-white rounded-lg p-6 border border-gray-100">
+    <div class="flex justify-between items-start mb-8">
+      <div>
+        <h1 class="font-custom text-4xl font-bold text-gray-600"><%= @callback.name %></h1>
+        <p class="text-gray-500 mt-2"><%= @callback.description %></p>
+      </div>
+      <div class="flex items-center space-x-3">
+        <% if @callback.active? %>
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            Active
+          </span>
+        <% else %>
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            </svg>
+            Inactive
+          </span>
+        <% end %>
+        <%= link_to "Edit", edit_admin_callback_path(@callback), 
+                   class: "bg-blue-600 hover:bg-blue-700 !text-white font-bold py-2 px-4 rounded" %>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <div class="bg-gray-50 rounded-lg p-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Configuration</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Callback URL</label>
+            <div class="bg-white border border-gray-300 rounded-md p-3">
+              <% if @callback.url.present? %>
+                <%= @callback.url %>
+              <% else %>
+                <span class="text-gray-400 italic">Not configured</span>
+              <% end %>
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Timeout</label>
+            <div class="bg-white border border-gray-300 rounded-md p-3">
+              <% if @callback.timeout_in_seconds.present? %>
+                <span class="text-gray-900"><%= @callback.timeout_in_seconds %> seconds</span>
+              <% else %>
+                <span class="text-gray-400 italic">Not configured</span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-gray-50 rounded-lg p-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Metadata</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Created</label>
+            <div class="bg-white border border-gray-300 rounded-md p-3">
+              <span class="text-gray-900"><%= @callback.created_at.strftime("%B %d, %Y at %I:%M %p") %></span>
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Last Updated</label>
+            <div class="bg-white border border-gray-300 rounded-md p-3">
+              <span class="text-gray-900"><%= @callback.updated_at.strftime("%B %d, %Y at %I:%M %p") %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
