@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_17_195312) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_01_164111) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -49,6 +49,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_17_195312) do
     t.index ["name"], name: "index_events_on_name"
   end
 
+  create_table "integration_settings", force: :cascade do |t|
+    t.bigint "company_id", null: false
+    t.boolean "enabled", default: false
+    t.jsonb "settings", default: {}
+    t.jsonb "credentials", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_integration_settings_on_company_id"
+  end
+
   create_table "settings", force: :cascade do |t|
     t.string "name", null: false
     t.string "description"
@@ -81,4 +91,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_17_195312) do
   end
 
   add_foreign_key "events", "companies"
+  add_foreign_key "integration_settings", "companies"
 end
