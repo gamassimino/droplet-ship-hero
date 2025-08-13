@@ -4,7 +4,32 @@ Droplets are integrations between third-party services and Fluid. This is a repo
 
 Documentation can be found in the [project's GitHub page](https://fluid-commerce.github.io/droplet-template/)
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/fluid-commerce/droplet-template)
+## Production environment
+
+### Google cloud infrastructure
+
+- Google Cloud Run (Web)
+- Google Cloud Storage (Terraform)
+- Google Cloud SQL (postgreSQL)
+- Google Cloud Build (CI/CD)
+- Google Cloud Compute Engine (jobs console)
+- Artifact Registry (Docker)
+
+web: Google Cloud Run name `fluid-droplet-NAME`
+
+jobs console: Google Cloud Compute Engine name `fluid-droplet-NAME-jobs-console`
+
+### Deploy to google cloud
+
+Run github action to deploy to google cloud `deploy production`
+or run the following command to deploy to google cloud  
+
+`gcloud beta builds submit --config cloudbuild-production.yml --region=us-west3 --substitutions=COMMIT_SHA=$(git rev-parse --short HEAD),_TIMESTAMP=$(date +%Y%m%d%H%M%S) --project=fluid-417204 .`
+
+### Add environment variables to google cloud
+
+Add environment variables to google cloud `add-update-env-gcloud.sh` and run the following command to add environment variables to google cloud
+`sh add-update-env-gcloud.sh`
 
 ### Technology Stack
 
@@ -17,16 +42,27 @@ Documentation can be found in the [project's GitHub page](https://fluid-commerce
 ![Tailwind CSS 4.0](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?logo=tailwindcss&logoColor=white)
 <br>
 
+## Local environment
+
 ### Running locally
 
+Install dependencies with `bundle install` and `yarn install`
+and install foreman with `gem install foreman`  
 Just the rails server (port 3000)<br>
-`bin/rails server`
+`foreman start -f Procfile.dev`
 
 Running everything (port 3200)<br>
 `bin/dev`
 
+### Running locally with docker
+
+Configure your environment variables in `.env` file
+and run the following command:  
+`make install`
 Running it as a docker service (port 3600)<br>
-`docker compose up`
+`make up`
+
+Run `make help` to see all commands
 
 ### License
 
