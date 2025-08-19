@@ -6,6 +6,7 @@ acme:
   authentication_token: acme_token
   fluid_company_id: 1234567890
   company_droplet_uuid: acme-uuid-123
+  droplet_installation_uuid: acme-installation-uuid-123
   service_company_id: acme-123
   active: true
   webhook_verification_token: acme-verify-token
@@ -16,6 +17,7 @@ globex:
   authentication_token: globex_token
   fluid_company_id: 9876543210
   company_droplet_uuid: globex-uuid-456
+  droplet_installation_uuid: globex-installation-uuid-456
   service_company_id: globex-456
   active: true
   webhook_verification_token: globex-verify-token

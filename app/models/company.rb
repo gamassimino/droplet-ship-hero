@@ -6,4 +6,12 @@ class Company < ApplicationRecord
   validates :authentication_token, uniqueness: true
 
   scope :active, -> { where(active: true) }
+
+  after_initialize :set_default_installed_callback_ids, if: :new_record?
+
+private
+
+  def set_default_installed_callback_ids
+    self.installed_callback_ids ||= []
+  end
 end

@@ -28,7 +28,10 @@ class DropletUseCaseTest < ActiveSupport::TestCase
 
   test "DropletUseCase::Create returns success with droplet and webhook data" do
     droplet_data = { "uuid" => "abc" }
-    webhook_data = { "id" => "web-1" }
+    webhook_data = {
+      installation_webhook: { "id" => "web-1" },
+      uninstallation_webhook: { "id" => "web-2" },
+    }
 
     @mock_droplet_manager.expect :create, droplet_data
     @mock_webhook_manager.expect :create, webhook_data
@@ -39,7 +42,8 @@ class DropletUseCaseTest < ActiveSupport::TestCase
     result = use_case.call
     assert_equal true, result[:success]
     assert_equal droplet_data, result[:droplet]
-    assert_equal webhook_data, result[:webhook]
+    assert_equal webhook_data[:installation_webhook], result[:installation_webhook]
+    assert_equal webhook_data[:uninstallation_webhook], result[:uninstallation_webhook]
     @mock_droplet_manager.verify
     @mock_webhook_manager.verify
   end
@@ -71,7 +75,10 @@ class DropletUseCaseTest < ActiveSupport::TestCase
   end
 
   test "DropletUseCase::Update returns success with webhook data" do
-    webhook_data = { "id" => "web-2" }
+    webhook_data = {
+      installation_webhook: { "id" => "web-2" },
+      uninstallation_webhook: { "id" => "web-3" },
+    }
     @mock_droplet_manager.expect :update, nil
     @mock_webhook_manager.expect :update, webhook_data
 

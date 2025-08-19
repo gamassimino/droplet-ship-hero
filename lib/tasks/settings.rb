@@ -186,7 +186,10 @@ module Tasks
                 type: "string",
                 enum: %w[ GET POST PUT PATCH DELETE ],
               },
-              webhook_id: {
+              webhook_installation_id: {
+                type: "string",
+              },
+              webhook_uninstallation_id: {
                 type: "string",
               },
             },

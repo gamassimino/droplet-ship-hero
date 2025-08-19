@@ -85,5 +85,91 @@ describe DropletInstalledJob do
       # Job should run without creating a company or raising errors
       _(-> { DropletInstalledJob.perform_now(payload) }).wont_change "Company.count"
     end
+
+    it "registers callbacks when active callbacks exist" do
+      # Create an active callback
+      callback = ::Callback.create!(
+        name: "test_callback",
+        description: "Test callback",
+        url: "https://example.com/callback",
+        timeout_in_seconds: 10,
+        active: true
+      )
+
+      company_data = {
+        "fluid_shop" => "unique-callback-shop-789",
+        "name" => "Callback Test Shop",
+        "fluid_company_id" => 789,
+        "droplet_uuid" => "callback-test-uuid",
+        "authentication_token" => "unique-callback-auth-token",
+        "webhook_verification_token" => "callback-verify-token",
+        "droplet_installation_uuid" => "callback-installation-uuid",
+      }
+
+      payload = { "company" => company_data }
+
+      # Job should run and create company even if callback registration fails
+      _(-> { DropletInstalledJob.perform_now(payload) }).must_change "Company.count", +1
+
+      # Check that the company was created
+      company = Company.last
+      _(company.fluid_shop).must_equal "unique-callback-shop-789"
+      _(company.name).must_equal "Callback Test Shop"
+    end
+
+    it "handles callback registration errors gracefully" do
+      # Create an active callback
+      callback = ::Callback.create!(
+        name: "test_callback",
+        description: "Test callback",
+        url: "https://example.com/callback",
+        timeout_in_seconds: 10,
+        active: true
+      )
+
+      company_data = {
+        "fluid_shop" => "unique-error-shop-999",
+        "name" => "Error Test Shop",
+        "fluid_company_id" => 999,
+        "droplet_uuid" => "error-test-uuid",
+        "authentication_token" => "unique-error-auth-token",
+        "webhook_verification_token" => "error-verify-token",
+        "droplet_installation_uuid" => "error-installation-uuid",
+      }
+
+      payload = { "company" => company_data }
+
+      # Job should run and create company even with callback errors
+      _(-> { DropletInstalledJob.perform_now(payload) }).must_change "Company.count", +1
+
+      # Check that the company was created
+      company = Company.last
+      _(company.fluid_shop).must_equal "unique-error-shop-999"
+      _(company.name).must_equal "Error Test Shop"
+    end
+
+    it "handles no active callbacks" do
+      # Ensure no active callbacks exist
+      ::Callback.update_all(active: false)
+
+      company_data = {
+        "fluid_shop" => "unique-no-callback-shop-111",
+        "name" => "No Callback Shop",
+        "fluid_company_id" => 111,
+        "droplet_uuid" => "no-callback-test-uuid",
+        "authentication_token" => "unique-no-callback-auth-token",
+        "webhook_verification_token" => "no-callback-verify-token",
+        "droplet_installation_uuid" => "no-callback-installation-uuid",
+      }
+
+      payload = { "company" => company_data }
+
+      # Job should run without any FluidClient calls
+      _(-> { DropletInstalledJob.perform_now(payload) }).must_change "Company.count", +1
+
+      # Check that the company was created without installed callback IDs
+      company = Company.last
+      _(company.installed_callback_ids).must_be_empty
+    end
   end
 end

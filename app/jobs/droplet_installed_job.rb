@@ -43,6 +43,7 @@ private
   def register_active_callbacks
     client = FluidClient.new
     active_callbacks = ::Callback.active
+    installed_callback_ids = []
 
     active_callbacks.each do |callback|
       begin
@@ -53,15 +54,24 @@ private
           active: true,
         }
 
-        client.callback_registrations.create(callback_attributes)
-        Rails.logger.info(
-          "[DropletInstalledJob] Successfully registered callback: #{callback.name}"
-        )
+        response = client.callback_registrations.create(callback_attributes)
+        if response && response["callback_registration"]["uuid"]
+          installed_callback_ids << response["callback_registration"]["uuid"]
+        else
+          Rails.logger.warn(
+            "[DropletInstalledJob] Callback registered but no UUID returned for: #{callback.name}"
+          )
+        end
       rescue => e
         Rails.logger.error(
           "[DropletInstalledJob] Failed to register callback #{callback.name}: #{e.message}"
         )
       end
+    end
+
+    if installed_callback_ids.any?
+      company = get_company
+      company.update(installed_callback_ids: installed_callback_ids)
     end
   end
 end

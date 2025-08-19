@@ -35,14 +35,16 @@ describe WebhooksController do
 
     it "handles droplet uninstalled event with valid authentication token in header" do
       company = companies(:acme)
+      webhook_auth_token = Setting.fluid_webhook.auth_token
+
       post webhook_url, params: {
         resource: "droplet",
         event: "uninstalled",
         company: {
-          company_droplet_uuid: company.company_droplet_uuid,
+          droplet_installation_uuid: company.droplet_installation_uuid,
           fluid_company_id: company.fluid_company_id,
         },
-      }, headers: { "AUTH_TOKEN" => company.webhook_verification_token }, as: :json
+      }, headers: { "AUTH_TOKEN" => webhook_auth_token }, as: :json
 
       _(response.status).must_equal 202
 
@@ -54,6 +56,7 @@ describe WebhooksController do
 
     it "updates existing company on droplet installed event" do
       company = companies(:acme)
+      webhook_auth_token = Setting.fluid_webhook.auth_token
 
       post webhook_url, params: {
         resource: "droplet",
@@ -66,7 +69,7 @@ describe WebhooksController do
           authentication_token: "updated-token-456",
           webhook_verification_token: company.webhook_verification_token,
         },
-      }, headers: { "AUTH_TOKEN" => company.webhook_verification_token }, as: :json
+      }, headers: { "AUTH_TOKEN" => webhook_auth_token }, as: :json
 
       _(response.status).must_equal 202
 
@@ -85,7 +88,7 @@ describe WebhooksController do
         resource: "droplet",
         event: "uninstalled",
         company: {
-          company_droplet_uuid: company.company_droplet_uuid,
+          droplet_installation_uuid: company.droplet_installation_uuid,
           fluid_company_id: company.fluid_company_id,
           webhook_verification_token: "invalid-token",
         },
@@ -101,7 +104,7 @@ describe WebhooksController do
         resource: "droplet",
         event: "uninstalled",
         company: {
-          company_droplet_uuid: company.company_droplet_uuid,
+          droplet_installation_uuid: company.droplet_installation_uuid,
           fluid_company_id: company.fluid_company_id,
         },
       }, headers: { "AUTH_TOKEN" => "invalid-token" }, as: :json
@@ -111,15 +114,17 @@ describe WebhooksController do
     end
 
     it "returns 404 when company is not found" do
+      webhook_auth_token = Setting.fluid_webhook.auth_token
+
       post webhook_url, params: {
         resource: "droplet",
         event: "uninstalled",
         company: {
-          company_droplet_uuid: "non-existent-uuid",
+          droplet_installation_uuid: "non-existent-uuid",
           fluid_company_id: 999999,
           webhook_verification_token: "any-token",
         },
-      }, headers: { "AUTH_TOKEN" => "any-token" }, as: :json
+      }, headers: { "AUTH_TOKEN" => webhook_auth_token }, as: :json
 
       _(response.status).must_equal 404
       _(JSON.parse(response.body)["error"]).must_equal "Company not found"
@@ -127,15 +132,17 @@ describe WebhooksController do
 
     it "relies on company payload for authentication if auth token is not provided" do
       company = companies(:acme)
+      webhook_auth_token = Setting.fluid_webhook.auth_token
+
       post webhook_url, params: {
         resource: "droplet",
         event: "uninstalled",
         company: {
-          company_droplet_uuid: company.company_droplet_uuid,
+          droplet_installation_uuid: company.droplet_installation_uuid,
           fluid_company_id: company.fluid_company_id,
           webhook_verification_token: company.webhook_verification_token,
         },
-      }, as: :json
+      }, headers: { "AUTH_TOKEN" => webhook_auth_token }, as: :json
 
       _(response.status).must_equal 202
 
@@ -170,16 +177,17 @@ describe WebhooksController do
   describe "unknown events" do
     it "handles unknown event types with no content" do
       company = companies(:acme)
+      webhook_auth_token = Setting.fluid_webhook.auth_token
 
       post webhook_url, params: {
         resource: "unknown_resource",
         event: "unknown_event",
         company: {
-          company_droplet_uuid: company.company_droplet_uuid,
+          droplet_installation_uuid: company.droplet_installation_uuid,
           fluid_company_id: company.fluid_company_id,
           webhook_verification_token: company.webhook_verification_token,
         },
-      }, as: :json
+      }, headers: { "AUTH_TOKEN" => webhook_auth_token }, as: :json
 
       _(response.status).must_equal 204
     end

@@ -7,7 +7,11 @@ module DropletUseCase
         droplet_data = droplet_manager.create
         webhook_data = webhook_manager.create
 
-        success(droplet: droplet_data, webhook: webhook_data)
+        success(
+          droplet: droplet_data,
+          installation_webhook: webhook_data[:installation_webhook],
+          uninstallation_webhook: webhook_data[:uninstallation_webhook]
+        )
       end
     rescue FluidClient::Error => e
       failure(e.message)

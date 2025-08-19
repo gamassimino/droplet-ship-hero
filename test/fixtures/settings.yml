@@ -16,12 +16,13 @@ fluid_api:
 
 fluid_webhook:
   name: fluid_webhook
-  schema: '{"type": "object", "properties": {"url": {"type": "string"}, "auth_token": {"type": "string"}, "http_method": {"type": "string"}, "webhook_id": {"type": "string"}}}'
+  schema: '{"type": "object", "properties": {"url": {"type": "string"}, "auth_token": {"type": "string"}, "http_method": {"type": "string"}, "webhook_installation_id": {"type": "string"}, "webhook_uninstallation_id": {"type": "string"}}}'
   values:
     url: "http://localhost:3200/webhook"
     auth_token: "secret_token"
     http_method: "POST"
-    webhook_id: "existing-webhook-id"
+    webhook_installation_id: "existing-installation-webhook-id"
+    webhook_uninstallation_id: "existing-uninstallation-webhook-id"
 
 marketplace_page:
   name: marketplace_page
