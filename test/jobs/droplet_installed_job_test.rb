@@ -48,7 +48,7 @@ describe DropletInstalledJob do
         "fluid_company_id" => 12345,
         "droplet_uuid" => "new-uuid-123",
         "authentication_token" => "unique-new-auth-token",
-        "webhook_verification_token" => "new-verify-token",
+        "webhook_verification_token" => "old-verify-token",
         "droplet_installation_uuid" => "new-installation-uuid-456",
       }
 
@@ -60,8 +60,44 @@ describe DropletInstalledJob do
       _(existing_company.name).must_equal "Updated Shop"
       _(existing_company.company_droplet_uuid).must_equal "new-uuid-123"
       _(existing_company.authentication_token).must_equal "unique-new-auth-token"
-      _(existing_company.webhook_verification_token).must_equal "new-verify-token"
+      _(existing_company.webhook_verification_token).must_equal "old-verify-token"
       _(existing_company.droplet_installation_uuid).must_equal "new-installation-uuid-456"
+      _(existing_company).must_be :active?
+    end
+
+    it "skips update when webhook_verification_token is different" do
+      existing_company = Company.create!(
+        fluid_shop: "unique-skip-update-shop-789",
+        name: "Original Name",
+        fluid_company_id: 12345,
+        company_droplet_uuid: "original-uuid",
+        authentication_token: "unique-original-token",
+        webhook_verification_token: "original-verify-token",
+        active: true
+      )
+
+      company_data = {
+        "fluid_shop" => "unique-skip-update-shop-789",
+        "name" => "Attempted Update Name",
+        "fluid_company_id" => 12345,
+        "droplet_uuid" => "attempted-uuid",
+        "authentication_token" => "unique-attempted-token",
+        "webhook_verification_token" => "different-verify-token",
+        "droplet_installation_uuid" => "attempted-installation-uuid",
+      }
+
+      payload = { "company" => company_data }
+
+      # Job should run without changing company count or updating the company
+      _(-> { DropletInstalledJob.perform_now(payload) }).wont_change "Company.count"
+
+      existing_company.reload
+      # Company should remain unchanged
+      _(existing_company.name).must_equal "Original Name"
+      _(existing_company.company_droplet_uuid).must_equal "original-uuid"
+      _(existing_company.authentication_token).must_equal "unique-original-token"
+      _(existing_company.webhook_verification_token).must_equal "original-verify-token"
+      _(existing_company.droplet_installation_uuid).must_be_nil
       _(existing_company).must_be :active?
     end
 
