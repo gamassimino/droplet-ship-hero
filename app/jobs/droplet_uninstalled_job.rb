@@ -19,7 +19,7 @@ private
   def delete_installed_callbacks(company)
     return unless company.installed_callback_ids.present?
 
-    client = FluidClient.new
+    client = FluidClient.new(company.authentication_token)
 
     company.installed_callback_ids.each do |callback_id|
       begin

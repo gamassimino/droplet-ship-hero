@@ -160,5 +160,31 @@ describe DropletUninstalledJob do
       # Original company should remain unchanged
       _(company.reload.uninstalled_at).must_be_nil
     end
+
+    it "uses company authentication token for FluidClient" do
+      company = companies(:acme)
+      company.update(uninstalled_at: nil, installed_callback_ids: %w[cbr_test123 cbr_test456])
+
+      payload = {
+        "company" => {
+          "company_droplet_uuid" => company.company_droplet_uuid,
+          "fluid_company_id" => company.fluid_company_id,
+        },
+      }
+
+      mock_client = Minitest::Mock.new
+      mock_callback_registrations = Minitest::Mock.new
+
+      mock_client.expect :callback_registrations, mock_callback_registrations
+      mock_callback_registrations.expect :delete, true, [ "cbr_test123" ]
+      mock_callback_registrations.expect :delete, true, [ "cbr_test456" ]
+
+      captured_token = nil
+      FluidClient.stub :new, ->(token) { captured_token = token; mock_client } do
+        DropletUninstalledJob.perform_now(payload)
+      end
+
+      assert_equal company.authentication_token, captured_token
+    end
   end
 end

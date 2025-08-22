@@ -186,6 +186,13 @@ mock_callback_definitions({ "meta" => { "timestamp" => "2025-07-29T20:52:09Z" } 
     assert_not existing_callback.active
   end
 
+  test "uses fluid api key for authentication" do
+    service = CallbackSyncService.new
+    client = service.instance_variable_get(:@client)
+
+    assert_equal Setting.fluid_api.api_key, client.instance_variable_get(:@auth_token)
+  end
+
 private
 
   def mock_callback_definitions(response)
