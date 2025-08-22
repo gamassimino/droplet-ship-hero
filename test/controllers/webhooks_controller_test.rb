@@ -10,7 +10,7 @@ describe WebhooksController do
         fluid_shop: "test-shop",
         name: "Test Company",
         fluid_company_id: 123456,
-        droplet_uuid: "abc-123-xyz",
+        droplet_uuid: "existing-uuid",
         authentication_token: "secret-token-123",
         webhook_verification_token: "verify-token-456",
       }
@@ -29,7 +29,7 @@ describe WebhooksController do
       _(company.fluid_shop).must_equal "test-shop"
       _(company.name).must_equal "Test Company"
       _(company.fluid_company_id).must_equal 123456
-      _(company.company_droplet_uuid).must_equal "abc-123-xyz"
+      _(company.company_droplet_uuid).must_equal "existing-uuid"
       _(company).must_be :active?
     end
 
@@ -65,7 +65,7 @@ describe WebhooksController do
           fluid_shop: company.fluid_shop,
           name: "Updated Company Name",
           fluid_company_id: company.fluid_company_id,
-          droplet_uuid: "updated-uuid-456",
+          droplet_uuid: "existing-uuid",
           authentication_token: "updated-token-456",
           webhook_verification_token: company.webhook_verification_token,
         },
@@ -77,7 +77,7 @@ describe WebhooksController do
 
       company.reload
       _(company.name).must_equal "Updated Company Name"
-      _(company.company_droplet_uuid).must_equal "updated-uuid-456"
+      _(company.company_droplet_uuid).must_equal "existing-uuid"
       _(company.authentication_token).must_equal "updated-token-456"
       _(company).must_be :active?
     end
@@ -157,7 +157,7 @@ describe WebhooksController do
         fluid_shop: "new-shop",
         name: "New Company",
         fluid_company_id: 999999,
-        droplet_uuid: "new-uuid-123",
+        droplet_uuid: "existing-uuid",
         authentication_token: "new-secret-token",
         webhook_verification_token: "new-verify-token",
       }
@@ -171,6 +171,123 @@ describe WebhooksController do
       }, as: :json
 
       _(response.status).must_equal 202
+    end
+  end
+
+  describe "droplet authorization validation" do
+    it "allows droplet installed event with valid droplet_uuid" do
+      company_data = {
+        fluid_shop: "test-shop",
+        name: "Test Company",
+        fluid_company_id: 123456,
+        droplet_uuid: "existing-uuid", # Matches Setting.droplet.uuid
+        authentication_token: "secret-token-123",
+        webhook_verification_token: "verify-token-456",
+      }
+
+      post webhook_url, params: {
+        resource: "droplet",
+        event: "installed",
+        company: company_data,
+      }, as: :json
+
+      _(response.status).must_equal 202
+    end
+
+    it "rejects droplet installed event with invalid droplet_uuid" do
+      company_data = {
+        fluid_shop: "test-shop",
+        name: "Test Company",
+        fluid_company_id: 123456,
+        droplet_uuid: "invalid-uuid", # Doesn't match Setting.droplet.uuid
+        authentication_token: "secret-token-123",
+        webhook_verification_token: "verify-token-456",
+      }
+
+      post webhook_url, params: {
+        resource: "droplet",
+        event: "installed",
+        company: company_data,
+      }, as: :json
+
+      _(response.status).must_equal 401
+      _(JSON.parse(response.body)["error"]).must_equal "Unauthorized"
+    end
+
+    it "rejects droplet installed event with missing droplet_uuid" do
+      company_data = {
+        fluid_shop: "test-shop",
+        name: "Test Company",
+        fluid_company_id: 123456,
+        # droplet_uuid is missing
+        authentication_token: "secret-token-123",
+        webhook_verification_token: "verify-token-456",
+      }
+
+      post webhook_url, params: {
+        resource: "droplet",
+        event: "installed",
+        company: company_data,
+      }, as: :json
+
+      _(response.status).must_equal 401
+      _(JSON.parse(response.body)["error"]).must_equal "Unauthorized"
+    end
+
+    it "rejects droplet installed event with nil droplet_uuid" do
+      company_data = {
+        fluid_shop: "test-shop",
+        name: "Test Company",
+        fluid_company_id: 123456,
+        droplet_uuid: nil,
+        authentication_token: "secret-token-123",
+        webhook_verification_token: "verify-token-456",
+      }
+
+      post webhook_url, params: {
+        resource: "droplet",
+        event: "installed",
+        company: company_data,
+      }, as: :json
+
+      _(response.status).must_equal 401
+      _(JSON.parse(response.body)["error"]).must_equal "Unauthorized"
+    end
+
+    it "bypasses droplet authorization for non-installed events" do
+      company = companies(:acme)
+      webhook_auth_token = Setting.fluid_webhook.auth_token
+
+      # This should use authenticate_webhook_token instead of validate_droplet_authorization
+      post webhook_url, params: {
+        resource: "droplet",
+        event: "uninstalled", # Not "installed"
+        company: {
+          droplet_installation_uuid: company.droplet_installation_uuid,
+          fluid_company_id: company.fluid_company_id,
+          droplet_uuid: "invalid-uuid", # This should be ignored for non-installed events
+        },
+      }, headers: { "AUTH_TOKEN" => webhook_auth_token }, as: :json
+
+      _(response.status).must_equal 202 # Should succeed because auth token is valid
+    end
+
+    it "bypasses droplet authorization for non-droplet resources" do
+      company = companies(:acme)
+      webhook_auth_token = Setting.fluid_webhook.auth_token
+
+      # This should use authenticate_webhook_token instead of validate_droplet_authorization
+      post webhook_url, params: {
+        resource: "other_resource", # Not "droplet"
+        event: "installed",
+        company: {
+          droplet_installation_uuid: company.droplet_installation_uuid,
+          fluid_company_id: company.fluid_company_id,
+          droplet_uuid: "invalid-uuid", # This should be ignored for non-droplet resources
+        },
+      }, headers: { "AUTH_TOKEN" => webhook_auth_token }, as: :json
+
+      _(response.status).must_equal 204 # Should return no content for unknown events
     end
   end
 

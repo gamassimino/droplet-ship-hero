@@ -18,16 +18,6 @@ class DropletInstalledJob < WebhookEventJob
 
     company = Company.find_by(fluid_shop: company_attributes["fluid_shop"]) || Company.new
 
-    # If the company has more than one webhook droplet installed, we need to check if the
-    # webhook_verification_token is the same as the one in the payload.
-    # If it's not, we need to skip the update.
-    if company.persisted? && company.webhook_verification_token != company_attributes["webhook_verification_token"]
-      Rails.logger.warn(
-        "[DropletInstalledJob] Skipping company update due to webhook_verification_token
-        mismatch for shop: #{company_attributes["fluid_shop"]}"
-      )
-      return
-    end
     company.assign_attributes(company_attributes.slice(
       "fluid_shop",
       "name",

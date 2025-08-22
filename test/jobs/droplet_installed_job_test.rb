@@ -65,7 +65,7 @@ describe DropletInstalledJob do
       _(existing_company).must_be :active?
     end
 
-    it "skips update when webhook_verification_token is different" do
+    it "updates existing company even when webhook_verification_token is different" do
       existing_company = Company.create!(
         fluid_shop: "unique-skip-update-shop-789",
         name: "Original Name",
@@ -88,16 +88,16 @@ describe DropletInstalledJob do
 
       payload = { "company" => company_data }
 
-      # Job should run without changing company count or updating the company
+      # Job should run without changing company count but updating the company
       _(-> { DropletInstalledJob.perform_now(payload) }).wont_change "Company.count"
 
       existing_company.reload
-      # Company should remain unchanged
-      _(existing_company.name).must_equal "Original Name"
-      _(existing_company.company_droplet_uuid).must_equal "original-uuid"
-      _(existing_company.authentication_token).must_equal "unique-original-token"
-      _(existing_company.webhook_verification_token).must_equal "original-verify-token"
-      _(existing_company.droplet_installation_uuid).must_be_nil
+      # Company should be updated despite different webhook_verification_token
+      _(existing_company.name).must_equal "Attempted Update Name"
+      _(existing_company.company_droplet_uuid).must_equal "attempted-uuid"
+      _(existing_company.authentication_token).must_equal "unique-attempted-token"
+      _(existing_company.webhook_verification_token).must_equal "different-verify-token"
+      _(existing_company.droplet_installation_uuid).must_equal "attempted-installation-uuid"
       _(existing_company).must_be :active?
     end
 
