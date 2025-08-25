@@ -116,4 +116,10 @@ class DropletUseCaseTest < ActiveSupport::TestCase
     assert_equal false, result[:success]
     assert_equal "webhook update fail", result[:error]
   end
+
+  test "DropletUseCase::Base uses fluid api key for authentication" do
+    use_case = DropletUseCase::Create.new
+    client = use_case.send(:client)
+    assert_equal Setting.fluid_api.api_key, client.instance_variable_get(:@auth_token)
+  end
 end

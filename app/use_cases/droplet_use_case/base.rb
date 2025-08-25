@@ -33,7 +33,7 @@ module DropletUseCase
     end
 
     def client
-      @client ||= FluidClient.new
+      @client ||= FluidClient.new(Setting.fluid_api.api_key)
     end
   end
 end

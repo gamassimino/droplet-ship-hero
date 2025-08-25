@@ -65,7 +65,7 @@ describe DropletInstalledJob do
       _(existing_company).must_be :active?
     end
 
-    it "skips update when webhook_verification_token is different" do
+    it "updates existing company even when webhook_verification_token is different" do
       existing_company = Company.create!(
         fluid_shop: "unique-skip-update-shop-789",
         name: "Original Name",
@@ -88,16 +88,16 @@ describe DropletInstalledJob do
 
       payload = { "company" => company_data }
 
-      # Job should run without changing company count or updating the company
+      # Job should run without changing company count but updating the company
       _(-> { DropletInstalledJob.perform_now(payload) }).wont_change "Company.count"
 
       existing_company.reload
-      # Company should remain unchanged
-      _(existing_company.name).must_equal "Original Name"
-      _(existing_company.company_droplet_uuid).must_equal "original-uuid"
-      _(existing_company.authentication_token).must_equal "unique-original-token"
-      _(existing_company.webhook_verification_token).must_equal "original-verify-token"
-      _(existing_company.droplet_installation_uuid).must_be_nil
+      # Company should be updated despite different webhook_verification_token
+      _(existing_company.name).must_equal "Attempted Update Name"
+      _(existing_company.company_droplet_uuid).must_equal "attempted-uuid"
+      _(existing_company.authentication_token).must_equal "unique-attempted-token"
+      _(existing_company.webhook_verification_token).must_equal "different-verify-token"
+      _(existing_company.droplet_installation_uuid).must_equal "attempted-installation-uuid"
       _(existing_company).must_be :active?
     end
 
@@ -206,6 +206,41 @@ describe DropletInstalledJob do
       # Check that the company was created without installed callback IDs
       company = Company.last
       _(company.installed_callback_ids).must_be_empty
+    end
+
+    it "uses company authentication token for FluidClient" do
+      callback = ::Callback.create!(
+        name: "test_callback",
+        description: "Test callback",
+        url: "https://example.com/callback",
+        timeout_in_seconds: 10,
+        active: true
+      )
+
+      company_data = {
+        "fluid_shop" => "unique-auth-test-shop-222",
+        "name" => "Auth Test Shop",
+        "fluid_company_id" => 222,
+        "droplet_uuid" => "auth-test-uuid",
+        "authentication_token" => "unique-auth-test-token-123",
+        "webhook_verification_token" => "auth-verify-token",
+        "droplet_installation_uuid" => "auth-installation-uuid",
+      }
+
+      payload = { "company" => company_data }
+
+      mock_client = Minitest::Mock.new
+      mock_callback_registrations = Minitest::Mock.new
+
+      mock_client.expect :callback_registrations, mock_callback_registrations
+      mock_callback_registrations.expect :create, { "callback_registration" => { "uuid" => "test-uuid" } }
+
+      captured_token = nil
+      FluidClient.stub :new, ->(token) { captured_token = token; mock_client } do
+        DropletInstalledJob.perform_now(payload)
+      end
+
+      assert_equal "unique-auth-test-token-123", captured_token
     end
   end
 end

@@ -1,6 +1,7 @@
 class WebhooksController < ApplicationController
   skip_before_action :verify_authenticity_token
-  before_action :authenticate_webhook_token, unless: :droplet_installed_for_first_time?
+  before_action :validate_droplet_authorization, if: :is_installed_event?
+  before_action :authenticate_webhook_token, unless: :is_installed_event?
 
   def create
     event_type = "#{params[:resource]}.#{params[:event]}"
@@ -19,7 +20,7 @@ class WebhooksController < ApplicationController
 
 private
 
-  def droplet_installed_for_first_time?
+  def is_installed_event?
     params[:resource] == "droplet" && params[:event] == "installed"
   end
 
@@ -27,12 +28,12 @@ private
     company = find_company
     if company.blank?
       render json: { error: "Company not found" }, status: :not_found
-    elsif !valid_auth_token?(company)
+    elsif !valid_auth_token?
       render json: { error: "Unauthorized" }, status: :unauthorized
     end
   end
 
-  def valid_auth_token?(company)
+  def valid_auth_token?
     # Check header auth token first, then fall back to params
     auth_header = request.headers["AUTH_TOKEN"] || request.headers["X-Auth-Token"] || request.env["HTTP_AUTH_TOKEN"]
     webhook_auth_token = Setting.fluid_webhook.auth_token
@@ -41,8 +42,7 @@ private
   end
 
   def find_company
-    Company.find_by(droplet_installation_uuid: company_params[:droplet_installation_uuid]) ||
-      Company.find_by(fluid_company_id: company_params[:fluid_company_id])
+    Company.find_by(fluid_company_id: company_params[:fluid_company_id])
   end
 
   def company_params

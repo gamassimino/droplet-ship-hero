@@ -6,7 +6,6 @@ class FluidClient
   include Fluid::CallbackRegistrations
 
   base_uri Setting.fluid_api.base_url
-  headers "Authorization" => "Bearer #{Setting.fluid_api.api_key}", "Content-Type" => "application/json"
   format :json
 
   Error                 = Class.new(StandardError)
@@ -14,8 +13,10 @@ class FluidClient
   ResourceNotFoundError = Class.new(Error)
   APIError              = Class.new(Error)
 
-  def initialize
+  def initialize(auth_token = nil)
     @http = self.class
+    @auth_token = auth_token
+    update_headers
   end
 
   def get(path, options = {})
@@ -35,6 +36,10 @@ class FluidClient
   end
 
 private
+
+  def update_headers
+    self.class.headers "Authorization" => "Bearer #{@auth_token}", "Content-Type" => "application/json"
+  end
 
   def format_options(options)
     options[:body] = options[:body].to_json if options[:body].is_a?(Hash)

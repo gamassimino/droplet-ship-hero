@@ -1,6 +1,6 @@
 class CallbackSyncService
   def initialize
-    @client = FluidClient.new
+    @client = FluidClient.new(Setting.fluid_api.api_key)
   end
 
   def sync
